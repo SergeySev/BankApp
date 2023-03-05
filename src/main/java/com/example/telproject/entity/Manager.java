@@ -44,6 +44,6 @@ public class Manager {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "manager")
     private Set<Client> clients = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "manager")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "manager")
     private Set<Product> products = new HashSet<>();
 }

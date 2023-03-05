@@ -20,9 +20,9 @@ public class Product {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @Column(name = "manager_id", nullable = false)
-    private Set<Manager> managerId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @Column(name = "manager_id")
+    private Manager managerId;
 
     @Basic
     @Column(name = "name", nullable = false, length = 70)
@@ -52,20 +52,19 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "client")
-    @JoinColumn(name = "id")
-    private Agreement agreement_id;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private Set<Agreement> agreements = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return status == product.status && rest.equals(product.rest) && id.equals(product.id) && managerId.equals(product.managerId) && name.equals(product.name) && currencyCode.equals(product.currencyCode) && interestRate.equals(product.interestRate) && createdAt.equals(product.createdAt) && updatedAt.equals(product.updatedAt) && agreement_id.equals(product.agreement_id);
+        return status == product.status && rest.equals(product.rest) && id.equals(product.id) && managerId.equals(product.managerId) && name.equals(product.name) && currencyCode.equals(product.currencyCode) && interestRate.equals(product.interestRate) && createdAt.equals(product.createdAt) && updatedAt.equals(product.updatedAt) && agreements.equals(product.agreements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, managerId, name, status, currencyCode, interestRate, rest, createdAt, updatedAt, agreement_id);
+        return Objects.hash(id, managerId, name, status, currencyCode, interestRate, rest, createdAt, updatedAt, agreements);
     }
 }

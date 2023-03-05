@@ -53,6 +53,12 @@ public class Account {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private Set<Agreement> agreements;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "debitAccount")
+    private Set<Transaction> debitTransactionList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "creditAccount")
+    private Set<Transaction> creditTransactionList;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

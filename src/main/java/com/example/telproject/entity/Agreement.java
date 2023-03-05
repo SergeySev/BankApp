@@ -23,8 +23,8 @@ public class Agreement {
     @JoinColumn(name = "account_id")
     private Account accountId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product productId;
 
     @Basic
