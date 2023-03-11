@@ -1,0 +1,198 @@
+app:
+  description: ${description}
+  version: ${version}
+  server:
+    url: ${app.server.url}
+
+spring:
+  main:
+    banner-mode: off
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/bank
+    username: developer
+    password: password
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+
+
+liquibase:
+  change-log: classpath:/db/changelog/changelog-master.xml
+
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/changes/v0.0.1-SNAPSHOT
+
+  - changeSet:
+      id: create-manager-table
+      author: serhii
+      changes:
+        - createTable:
+            tableName: manager
+            columns:
+              - column:
+                  name: id
+                  type: binary(16)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: varchar(50)
+              - column:
+                  name: last_name
+                  type: varchar(50)
+              - column:
+                  name: status
+                  type: tinyint(1)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-client-table
+      author: serhii
+      changes:
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: id
+                  type: binary(16)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: manager_id
+                  type: binary(16)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: tinyint(1)
+              - column:
+                  name: tax_code
+                  type: varchar(20)
+              - column:
+                  name: first_name
+                  type: varchar(50)
+              - column:
+                  name: last_name
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(60)
+              - column:
+                  name: address
+                  type: varchar(80)
+              - column:
+                  name: phone
+                  type: varchar(20)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+
+
+  - changeSet:
+      id: create_account_table
+      author: serhii
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: binary(16)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  type: binary(16)
+                  constraints:
+                    foreignKeyName: fk_client_account
+                    referencedTableName: client
+                    referencedColumnNames: id
+              - column:
+                  name: name
+                  type: varchar(100)
+              - column:
+                  name: type
+                  type: tinyint(1)
+              - column:
+                  name: status
+                  type: tinyint(1)
+              - column:
+                  name: balance
+                  type: decimal(15,2)
+              - column:
+                  name: currency_code
+                  type: tinyint(2)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueDate: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueDate: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: create_product_table
+      author: serhii
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: binary(16)
+                  constraints:
+                    primaryKey: true
+
+  - changeSet:
+      id: create_transaction_table
+      author: serhii
+      changes:
+        - createTable:
+            tableName: transaction
+            columns:
+              - column:
+                  name: id
+                  type: binary(16)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: account_id
+                  type: binary(16)
+                  constraints:
+                    foreignKeyName: fk_account_transaction
+                    referencedTableName: account
+                    referencedColumnNames: id
+              - column:
+                  name: amount
+                  type: decimal(15,2)
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValue: CURRENT_TIMESTAMP
+

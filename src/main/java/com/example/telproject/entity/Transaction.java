@@ -1,9 +1,8 @@
 package com.example.telproject.entity;
 
+import com.example.telproject.entity.enums.TransactionType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,6 +13,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "transaction")
 public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,27 +22,24 @@ public class Transaction {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "debit_account_id", nullable = false)
-    private Account debitAccountId;
+    private Account debitAccount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "credit_account_id", nullable = false)
-    private Account creditAccountId;
+    private Account creditAccount;
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private byte type;
+    private TransactionType type;
 
-    @Basic
     @Column(name = "amount", nullable = false, precision = 4)
     private BigDecimal amount;
 
-    @Basic
     @Column(name = "description", nullable = false, length = 250)
     private String description;
 
-    @Basic
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
@@ -50,11 +48,11 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return type == that.type && Objects.equals(id, that.id) && Objects.equals(debitAccountId, that.debitAccountId) && Objects.equals(creditAccountId, that.creditAccountId) && Objects.equals(amount, that.amount) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, debitAccountId, creditAccountId, type, amount, description, createdAt);
+        return Objects.hash(id);
     }
 }

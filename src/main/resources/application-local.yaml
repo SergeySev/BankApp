@@ -1,0 +1,8 @@
+spring:
+  jpa:
+    show-sql: true
+app:
+  description: "Dev version of bank service"
+  version: "0.0.1"
+  server:
+    stage: "dev"
