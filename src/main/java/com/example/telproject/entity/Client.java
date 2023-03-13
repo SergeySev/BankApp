@@ -15,7 +15,7 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "client")
 public class Client {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

@@ -4,25 +4,42 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-
-    <changeSet id="drop-product-table" author="serhii">
-        <dropTable tableName="product"/>
-    </changeSet>
     <changeSet id="drop-agreement-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="agreement"/>
+        </preConditions>
         <dropTable tableName="agreement"/>
     </changeSet>
+    <changeSet id="drop-product-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="product"/>
+        </preConditions>
+        <dropTable tableName="product"/>
+    </changeSet>
+
     <changeSet id="drop-transaction-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transaction"/>
+        </preConditions>
         <dropTable tableName="transaction"/>
     </changeSet>
     <changeSet id="drop-account-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="account"/>
+        </preConditions>
         <dropTable tableName="account"/>
     </changeSet>
-
     <changeSet id="drop-client-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="client"/>
+        </preConditions>
         <dropTable tableName="client"/>
     </changeSet>
-
     <changeSet id="drop-manager-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="manager"/>
+        </preConditions>
         <dropTable tableName="manager"/>
     </changeSet>
+
 </databaseChangeLog>
