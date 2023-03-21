@@ -1,16 +1,16 @@
 package com.example.telproject.entity.enums;
 
 public enum ManagerStatus {
-    ACTIVE(1),
-    PENDING(2),
-    REMOVED(3);
-    private final int value;
+    ACTIVE("ACTIVE"),
+    PENDING("PENDING"),
+    REMOVED("REMOVED");
+    private final String value;
 
-    ManagerStatus(int value) {
+    ManagerStatus(String value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 }

@@ -20,7 +20,7 @@ public class Client {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Manager manager;
 

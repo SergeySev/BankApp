@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -17,10 +18,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "manager")
 public class Manager {
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID", strategy = GenerationType.UUID)
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
+
+//    @Version
+//    Long version;
 
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
@@ -38,13 +42,23 @@ public class Manager {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Client> clients;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Product> products;
+
+    public Manager(String firstName, String lastName, ManagerStatus status) {
+        this.id = UUID.randomUUID();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.status = status;
+        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+
+    }
 
     @Override
     public boolean equals(Object o) {

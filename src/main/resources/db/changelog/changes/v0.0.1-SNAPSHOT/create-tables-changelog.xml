@@ -11,12 +11,12 @@
             </not>
         </preConditions>
         <createTable tableName="manager">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
-            <column name="status" type="tinyint(1)"/>
+            <column name="status" type="VARCHAR(50)"/>
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -33,13 +33,13 @@
             </not>
         </preConditions>
         <createTable tableName="client">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="uuid">
+            <column name="manager_id" type="BINARY(50)">
                 <constraints nullable="true"/>
             </column>
-            <column name="status" type="tinyint(1)"/>
+            <column name="status" type="VARCHAR(50)"/>
             <column name="tax_code" type="varchar(20)"/>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
@@ -61,18 +61,18 @@
             </not>
         </preConditions>
         <createTable tableName="account">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="client_id" type="uuid">
+            <column name="client_id" type="BINARY(50)">
                 <constraints foreignKeyName="fk_client_account" referencedTableName="client"
                              referencedColumnNames="id"/>
             </column>
             <column name="name" type="varchar(100)"/>
-            <column name="type" type="tinyint(1)"/>
-            <column name="status" type="tinyint(1)"/>
+            <column name="type" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(50)"/>
             <column name="balance" type="decimal(15,2)"/>
-            <column name="currency_code" type="tinyint(2)"/>
+            <column name="currency_code" type="VARCHAR(50)"/>
             <column name="created_at" type="timestamp"/>
             <column name="updated_at" type="timestamp"/>
         </createTable>
@@ -86,14 +86,14 @@
             </not>
         </preConditions>
         <createTable tableName="product">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="uuid">
+            <column name="manager_id" type="BINARY(50)">
                 <constraints foreignKeyName="true" referencedTableName="manager" referencedColumnNames="id"/>
             </column>
             <column name="name" type="varchar(70)"/>
-            <column name="status" type="tinyint(1)"/>
+            <column name="status" type="VARCHAR(50)"/>
             <column name="currency_code" type="int(2)"/>
             <column name="interest_rate" type="decimal(6,4)"/>
             <column name="rest" type="int"/>
@@ -111,19 +111,19 @@
             </not>
         </preConditions>
         <createTable tableName="agreement">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="account_id" type="uuid">
+            <column name="account_id" type="BINARY(50)">
                 <constraints foreignKeyName="fk_agreement_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="product_id" type="uuid">
+            <column name="product_id" type="BINARY(50)">
                 <constraints foreignKeyName="fk_agreement_product_id" referencedTableName="product"
                              referencedColumnNames="id"/>
             </column>
             <column name="interest_rate" type="decimal(6,4)" defaultValueNumeric="0.0000"/>
-            <column name="status" type="tinyint(1)" defaultValueNumeric="0"/>
+            <column name="status" type="VARCHAR(50)" defaultValueNumeric="0"/>
             <column name="sum" type="decimal(15,2)" defaultValueNumeric="0.00"/>
             <column name="created_at" type="timestamp"/>
             <column name="updated_at" type="timestamp">
@@ -140,18 +140,18 @@
             </not>
         </preConditions>
         <createTable tableName="transaction">
-            <column name="id" type="uuid">
+            <column name="id" type="BINARY(50)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="debit_account_id" type="uuid">
+            <column name="debit_account_id" type="BINARY(50)">
                 <constraints foreignKeyName="fk_debit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="credit_account_id" type="uuid">
+            <column name="credit_account_id" type="BINARY(50)">
                 <constraints foreignKeyName="fk_credit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="type" type="tinyint(1)"/>
+            <column name="type" type="VARCHAR(50)"/>
             <column name="amount" type="decimal(12,4)"/>
             <column name="description" type="varchar(250)"/>
             <column name="created_at" type="timestamp">

@@ -9,15 +9,15 @@
             <column name="id">aaaabbbb-0000-9999-8888-777766665555</column>
             <column name="first_name">John</column>
             <column name="last_name">Smith</column>
-            <column name="status">1</column>
+            <column name="status" value="ACTIVE"/>
             <column name="created_at">2023-03-13 10:00:00</column>
             <column name="updated_at">2023-03-13 10:00:00</column>
         </insert>
         <insert tableName="manager">
-            <column name="id">aaaabbbb-0000-9999-8888-777766665556</column>
+            <column name="id">aaaabbbb-1111-2222-3333-777766665556</column>
             <column name="first_name">Juli</column>
             <column name="last_name">Augistina</column>
-            <column name="status">0</column>
+            <column name="status" value="PENDING"/>
             <column name="created_at">2023-03-13 11:00:00</column>
             <column name="updated_at">2023-03-13 11:00:00</column>
         </insert>
@@ -27,7 +27,7 @@
         <insert tableName="client">
             <column name="id">bbbbaaaa-1111-8888-7777-444466665555</column>
             <column name="manager_id">aaaabbbb-0000-9999-8888-777766665555</column>
-            <column name="status">1</column>
+            <column name="status" value="ACTIVE"/>
             <column name="tax_code">987456123</column>
             <column name="first_name">Bruce</column>
             <column name="last_name">Willis</column>
@@ -42,10 +42,10 @@
             <column name="id">DE34-8123-5000-1413-5964</column>
             <column name="client_id">bbbbaaaa-1111-8888-7777-444466665555</column>
             <column name="name">Checking Account</column>
-            <column name="type">1</column>
-            <column name="status">1</column>
+            <column name="type" value="CREDIT"/>
+            <column name="status" value="ACTIVE"/>
             <column name="balance">3000.00</column>
-            <column name="currency_code">1</column>
+            <column name="currency_code" value="EUR"/>
         </insert>
     </changeSet>
 
@@ -54,7 +54,7 @@
             <column name="id">ffffdddd-cccc-1212-1313-123456789123</column>
             <column name="manager_id">aaaabbbb-0000-9999-8888-777766665555</column>
             <column name="name">Credit</column>
-            <column name="status">1</column>
+            <column name="status" value="ACTIVE"/>
             <column name="currency_code">1</column>
             <column name="interest_rate">0.750</column>
             <column name="rest">10000</column>
@@ -75,7 +75,7 @@
             <column name="id">TR0000000000000000007</column>
             <column name="debit_account_id">DE34-8123-5000-1413-5964</column>
             <column name="credit_account_id">DE34-8123-5000-1413-5964</column>
-            <column name="type">0</column>
+            <column name="type" value="NEW"/>
             <column name="amount">300.0000</column>
             <column name="description">Transaction for testing</column>
             <column name="created_at">2022-01-01 12:00:00</column>
