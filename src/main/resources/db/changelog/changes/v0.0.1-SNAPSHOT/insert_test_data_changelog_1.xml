@@ -6,7 +6,7 @@
 
     <changeSet id="insert-managers-data" author="serhii">
         <insert tableName="manager">
-            <column name="id">aaaabbbb-0000-9999-8888-777766665555</column>
+            <column name="id" valueComputed="UUID_TO_BIN('a6642ea6-16ff-4003-9725-1b8a4af1c6d4')"/>
             <column name="first_name">John</column>
             <column name="last_name">Smith</column>
             <column name="status" value="ACTIVE"/>
@@ -14,7 +14,7 @@
             <column name="updated_at">2023-03-13 10:00:00</column>
         </insert>
         <insert tableName="manager">
-            <column name="id">aaaabbbb-1111-2222-3333-777766665556</column>
+            <column name="id" valueComputed="UUID_TO_BIN('f7160d0c-103f-4ace-a71c-e6a00d674063')"/>
             <column name="first_name">Juli</column>
             <column name="last_name">Augistina</column>
             <column name="status" value="PENDING"/>
@@ -25,8 +25,8 @@
 
     <changeSet id="insert-client-data" author="serhii">
         <insert tableName="client">
-            <column name="id">bbbbaaaa-1111-8888-7777-444466665555</column>
-            <column name="manager_id">aaaabbbb-0000-9999-8888-777766665555</column>
+            <column name="id" valueComputed="UUID_TO_BIN('03f6e55d-467e-4a34-86ed-ed188ef59c21')"/>
+            <column name="manager_id" valueComputed="UUID_TO_BIN('a6642ea6-16ff-4003-9725-1b8a4af1c6d4')"/>
             <column name="status" value="ACTIVE"/>
             <column name="tax_code">987456123</column>
             <column name="first_name">Bruce</column>
@@ -34,13 +34,14 @@
             <column name="email">n.mankel@google.com</column>
             <column name="address">Strasse in Germany</column>
             <column name="phone">01529298777</column>
+            <column name="created_at">2023-03-13 16:16:16</column>
         </insert>
     </changeSet>
 
     <changeSet id="insert-account-data" author="serhii">
         <insert tableName="account">
-            <column name="id">DE34-8123-5000-1413-5964</column>
-            <column name="client_id">bbbbaaaa-1111-8888-7777-444466665555</column>
+            <column name="id" valueComputed="UUID_TO_BIN('13030d5e-72f5-4d8e-b82f-c88f879093ce')"/>
+            <column name="client_id" valueComputed="UUID_TO_BIN('03f6e55d-467e-4a34-86ed-ed188ef59c21')"/>
             <column name="name">Checking Account</column>
             <column name="type" value="CREDIT"/>
             <column name="status" value="ACTIVE"/>
@@ -51,11 +52,11 @@
 
     <changeSet id="insert-product-data" author="serhii">
         <insert tableName="product">
-            <column name="id">ffffdddd-cccc-1212-1313-123456789123</column>
-            <column name="manager_id">aaaabbbb-0000-9999-8888-777766665555</column>
+            <column name="id" valueComputed="UUID_TO_BIN('a1eaaea4-2282-4050-8cc7-55220f0bf778')"/>
+            <column name="manager_id" valueComputed="UUID_TO_BIN('a6642ea6-16ff-4003-9725-1b8a4af1c6d4')"/>
             <column name="name">Credit</column>
             <column name="status" value="ACTIVE"/>
-            <column name="currency_code">1</column>
+            <column name="currency_code" value="EUR"/>
             <column name="interest_rate">0.750</column>
             <column name="rest">10000</column>
         </insert>
@@ -63,18 +64,18 @@
 
     <changeSet id="insert-agreement-data" author="serhii">
         <insert tableName="agreement">
-            <column name="id">AGR000000000000001</column>
-            <column name="account_id">DE34-8123-5000-1413-5964</column>
-            <column name="product_id">ffffdddd-cccc-1212-1313-123456789123</column>
+            <column name="id" valueComputed="UUID_TO_BIN('9c1d641c-66ca-4baf-bab2-147eab8ac0f8')"/>
+            <column name="account_id" valueComputed="UUID_TO_BIN('13030d5e-72f5-4d8e-b82f-c88f879093ce')"/>
+            <column name="product_id" valueComputed="UUID_TO_BIN('a1eaaea4-2282-4050-8cc7-55220f0bf778')"/>
             <column name="interest_rate">1.750</column>
         </insert>
     </changeSet>
 
     <changeSet author="serhii" id="insert-transaction-data">
         <insert tableName="transaction">
-            <column name="id">TR0000000000000000007</column>
-            <column name="debit_account_id">DE34-8123-5000-1413-5964</column>
-            <column name="credit_account_id">DE34-8123-5000-1413-5964</column>
+            <column name="id" valueComputed="UUID_TO_BIN('5293248d-c3aa-4ce5-9ac8-57cb05479621')"/>
+            <column name="debit_account_id" valueComputed="UUID_TO_BIN('13030d5e-72f5-4d8e-b82f-c88f879093ce')"/>
+            <column name="credit_account_id" valueComputed="UUID_TO_BIN('13030d5e-72f5-4d8e-b82f-c88f879093ce')"/>
             <column name="type" value="NEW"/>
             <column name="amount">300.0000</column>
             <column name="description">Transaction for testing</column>

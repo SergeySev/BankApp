@@ -1,0 +1,10 @@
+package com.example.telproject.mapper;
+
+import com.example.telproject.dto.ManagerDTO;
+import com.example.telproject.entity.Manager;
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
+public interface ManagerMapper {
+    ManagerDTO toDto(Manager manager);
+}

@@ -1,13 +1,13 @@
 package com.example.telproject.controller;
 
+import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.service.ManagerService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/managers")
@@ -26,8 +26,13 @@ public class ManagerController {
     }
 
     @GetMapping(path = "{findManager}")
-    public Optional<Manager> showManagers(@PathVariable("findManager") String name) {
+    public Manager showManager(@PathVariable("findManager") String name) {
         return managerService.findManagerByName(name);
+    }
+
+    @GetMapping(path = "{findManager}dto")
+    public ManagerDTO showManagerDTO(@PathVariable("findManager") String name) {
+        return managerService.findManagerByNameDTO(name);
     }
 
     @PostMapping(path = "/registerManager")

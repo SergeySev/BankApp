@@ -3,6 +3,8 @@ package com.example.telproject.entity;
 import com.example.telproject.entity.enums.ManagerStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -18,13 +20,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "manager")
 public class Manager {
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.UUID)
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
-
-//    @Version
-//    Long version;
 
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;

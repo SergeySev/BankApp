@@ -1,5 +1,6 @@
 package com.example.telproject.entity;
 
+import com.example.telproject.entity.enums.CurrencyType;
 import com.example.telproject.entity.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,7 +34,7 @@ public class Product {
     private ProductStatus status;
 
     @Column(name = "currency_code", nullable = false)
-    private Integer currencyCode;
+    private CurrencyType currencyCode;
 
     @Column(name = "interest_rate", nullable = false, precision = 4)
     private BigDecimal interestRate;
