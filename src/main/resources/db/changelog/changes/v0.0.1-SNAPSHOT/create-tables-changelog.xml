@@ -11,7 +11,7 @@
             </not>
         </preConditions>
         <createTable tableName="manager">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
             <column name="first_name" type="varchar(50)"/>
@@ -33,10 +33,10 @@
             </not>
         </preConditions>
         <createTable tableName="client">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="BINARY(38)">
+            <column name="manager_id" type="binary(16)">
                 <constraints nullable="true"/>
             </column>
             <column name="status" type="VARCHAR(50)"/>
@@ -61,10 +61,10 @@
             </not>
         </preConditions>
         <createTable tableName="account">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="client_id" type="BINARY(38)">
+            <column name="client_id" type="binary(16)">
                 <constraints foreignKeyName="fk_client_account" referencedTableName="client"
                              referencedColumnNames="id"/>
             </column>
@@ -86,10 +86,10 @@
             </not>
         </preConditions>
         <createTable tableName="product">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="BINARY(38)">
+            <column name="manager_id" type="binary(16)">
                 <constraints foreignKeyName="true" referencedTableName="manager" referencedColumnNames="id"/>
             </column>
             <column name="name" type="varchar(70)"/>
@@ -111,14 +111,14 @@
             </not>
         </preConditions>
         <createTable tableName="agreement">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="account_id" type="BINARY(38)">
+            <column name="account_id" type="binary(16)">
                 <constraints foreignKeyName="fk_agreement_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="product_id" type="BINARY(38)">
+            <column name="product_id" type="binary(16)">
                 <constraints foreignKeyName="fk_agreement_product_id" referencedTableName="product"
                              referencedColumnNames="id"/>
             </column>
@@ -140,14 +140,14 @@
             </not>
         </preConditions>
         <createTable tableName="transaction">
-            <column name="id" type="BINARY(38)">
+            <column name="id" type="binary(16)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="debit_account_id" type="BINARY(38)">
+            <column name="debit_account_id" type="binary(16)">
                 <constraints foreignKeyName="fk_debit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="credit_account_id" type="BINARY(38)">
+            <column name="credit_account_id" type="binary(16)">
                 <constraints foreignKeyName="fk_credit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>

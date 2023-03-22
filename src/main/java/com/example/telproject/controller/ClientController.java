@@ -1,5 +1,6 @@
 package com.example.telproject.controller;
 
+import com.example.telproject.dto.ClientDTO;
 import com.example.telproject.entity.Client;
 import com.example.telproject.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class ClientController {
         return clientService.getClients();
     }
 
-    @GetMapping(path = "/{findClient}")
-    public Client showClient(@PathVariable ("findClient") String name) {
+    @GetMapping(path = "{findClient}")
+    public ClientDTO showClient(@PathVariable ("findClient") String name) {
         return clientService.findClientByName(name);
     }
 

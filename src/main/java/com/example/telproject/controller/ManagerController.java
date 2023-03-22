@@ -20,17 +20,7 @@ public class ManagerController {
         this.managerService = managerService;
     }
 
-    @GetMapping
-    public List<Manager> showManagers() {
-        return managerService.getManagers();
-    }
-
     @GetMapping(path = "{findManager}")
-    public Manager showManager(@PathVariable("findManager") String name) {
-        return managerService.findManagerByName(name);
-    }
-
-    @GetMapping(path = "{findManager}dto")
     public ManagerDTO showManagerDTO(@PathVariable("findManager") String name) {
         return managerService.findManagerByNameDTO(name);
     }
