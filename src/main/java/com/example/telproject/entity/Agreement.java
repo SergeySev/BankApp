@@ -7,7 +7,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -18,33 +17,20 @@ import java.util.UUID;
 @Table(name = "agreement")
 public class Agreement {
     @Id
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "account_id")
     private Account account;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @Column(name = "interest_rate", nullable = false, precision = 4)
-    private BigDecimal interestRate;
-
+    private BigDecimal interest_rate;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     private AccountProductStatus status;
-
-    @Column(name = "sum", nullable = false, precision = 2)
     private BigDecimal sum;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 
     @Override
     public boolean equals(Object o) {

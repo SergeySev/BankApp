@@ -29,6 +29,12 @@
         </preConditions>
         <dropTable tableName="account"/>
     </changeSet>
+    <changeSet id="drop-token-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="confirmation_token"/>
+        </preConditions>
+        <dropTable tableName="confirmation_token"/>
+    </changeSet>
     <changeSet id="drop-client-table" author="serhii">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="client"/>

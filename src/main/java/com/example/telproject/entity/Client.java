@@ -3,8 +3,12 @@ package com.example.telproject.entity;
 import com.example.telproject.entity.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -14,47 +18,56 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "client")
-public class Client {
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
+public class Client implements UserDetails {
+        @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
+    @ToString.Exclude
     private Manager manager;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     private ClientStatus status;
-
-    @Column(name = "tax_code", nullable = false, length = 20)
     private String taxCode;
-
-    @Column(name = "first_name", nullable = false, length = 50)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 50)
-    private String lastName;
-
-    @Column(name = "email", nullable = false, length = 60)
+    private String first_name;
+    private String last_name;
     private String email;
-
-    @Column(name = "address", nullable = false, length = 80)
+    String password;
     private String address;
-
-    @Column(name = "phone", nullable = false, length = 20)
     private String phone;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    private Timestamp birth_date;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "client")
     @ToString.Exclude
     private Set<Account> accountList;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<ConfirmationToken> tokens;
+
+
+    public Client(
+            Manager manager,
+            String first_name,
+            String last_name,
+            String email,
+            Timestamp birth_date,
+            String password
+    ) {
+        this.manager = manager;
+        this.status = ClientStatus.PENDING;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.password = password;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
+        this.birth_date = birth_date;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -67,5 +80,36 @@ public class Client {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, phone);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(status.getValue());
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public String getUsername() {
+        return first_name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return status != ClientStatus.REMOVED;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return status != ClientStatus.BLOCKED;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == ClientStatus.ACTIVE;
     }
 }

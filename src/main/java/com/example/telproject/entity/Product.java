@@ -17,36 +17,21 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "product")
 public class Product {
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
+    @ToString.Exclude
     private Manager manager;
-
-    @Column(name = "name", nullable = false, length = 70)
     private String name;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     private ProductStatus status;
-
-    @Column(name = "currency_code", nullable = false)
-    private CurrencyType currencyCode;
-
-    @Column(name = "interest_rate", nullable = false, precision = 4)
-    private BigDecimal interestRate;
-
-    @Column(name = "rest", nullable = false)
+    private CurrencyType currency_code;
+    private BigDecimal interest_rate;
     private Integer rest;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product")
     @ToString.Exclude

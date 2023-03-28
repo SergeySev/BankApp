@@ -3,14 +3,11 @@ package com.example.telproject.entity;
 import com.example.telproject.entity.enums.ManagerStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,41 +18,31 @@ import java.util.UUID;
 @Table(name = "manager")
 public class Manager {
     @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
-    @Column(name = "first_name", nullable = false, length = 50)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 50)
-    private String lastName;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String first_name;
+    private String last_name;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     private ManagerStatus status;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
-
+    private String email;
+    private String phone_number;
+    private Timestamp birth_date;
+    private Timestamp created_at;
+    private Timestamp updated_at;
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Client> clients;
-
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "manager", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Product> products;
 
-    public Manager(String firstName, String lastName, ManagerStatus status) {
-        this.id = UUID.randomUUID();
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Manager(String first_name, String lastName, ManagerStatus status, Timestamp birthDate) {
+        this.first_name = first_name;
+        this.last_name = lastName;
         this.status = status;
-        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
-        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
-
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
+        this.updated_at = Timestamp.valueOf(LocalDateTime.now());
+        this.birth_date = birthDate;
     }
 
     @Override

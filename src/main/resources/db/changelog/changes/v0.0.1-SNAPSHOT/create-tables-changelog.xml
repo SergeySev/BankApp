@@ -11,12 +11,15 @@
             </not>
         </preConditions>
         <createTable tableName="manager">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
             <column name="status" type="VARCHAR(50)"/>
+            <column name="email" type="VARCHAR(50)"/>
+            <column name="phone_number" type="VARCHAR(50)"/>
+            <column name="birth_date" type="timestamp"/>
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -33,25 +36,50 @@
             </not>
         </preConditions>
         <createTable tableName="client">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="binary(16)">
-                <constraints nullable="true"/>
+            <column name="manager_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(50)"/>
             <column name="tax_code" type="varchar(20)"/>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
             <column name="email" type="varchar(60)"/>
+            <column name="password" type="varchar(100)"/>
             <column name="address" type="varchar(80)"/>
             <column name="phone" type="varchar(20)"/>
+            <column name="birth_date" type="timestamp"/>
             <column name="created_at" type="timestamp"/>
             <column name="updated_at" type="timestamp"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="client" baseColumnNames="manager_id"
                                  constraintName="fk_manager_id_client"
                                  referencedTableName="manager" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-confirmation_token-table" author="serhii">
+        <preConditions onFail="CONTINUE" onFailMessage="Table client already exists">
+            <not>
+                <tableExists tableName="confirmation_token"/>
+            </not>
+        </preConditions>
+        <createTable tableName="confirmation_token">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(50)"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="expired_at" type="timestamp"/>
+            <column name="confirmed_at" type="timestamp"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="confirmation_token" baseColumnNames="client_id"
+                                 constraintName="fk_client_id_confirmation_token"
+                                 referencedTableName="client" referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet author="serhii" id="create_account_table">
@@ -61,10 +89,10 @@
             </not>
         </preConditions>
         <createTable tableName="account">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="client_id" type="binary(16)">
+            <column name="client_id" type="bigint">
                 <constraints foreignKeyName="fk_client_account" referencedTableName="client"
                              referencedColumnNames="id"/>
             </column>
@@ -86,10 +114,10 @@
             </not>
         </preConditions>
         <createTable tableName="product">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="manager_id" type="binary(16)">
+            <column name="manager_id" type="bigint">
                 <constraints foreignKeyName="true" referencedTableName="manager" referencedColumnNames="id"/>
             </column>
             <column name="name" type="varchar(70)"/>
@@ -111,14 +139,14 @@
             </not>
         </preConditions>
         <createTable tableName="agreement">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="account_id" type="binary(16)">
+            <column name="account_id" type="bigint">
                 <constraints foreignKeyName="fk_agreement_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="product_id" type="binary(16)">
+            <column name="product_id" type="bigint">
                 <constraints foreignKeyName="fk_agreement_product_id" referencedTableName="product"
                              referencedColumnNames="id"/>
             </column>
@@ -140,14 +168,14 @@
             </not>
         </preConditions>
         <createTable tableName="transaction">
-            <column name="id" type="binary(16)">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="debit_account_id" type="binary(16)">
+            <column name="debit_account_id" type="bigint">
                 <constraints foreignKeyName="fk_debit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="credit_account_id" type="binary(16)">
+            <column name="credit_account_id" type="bigint">
                 <constraints foreignKeyName="fk_credit_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>

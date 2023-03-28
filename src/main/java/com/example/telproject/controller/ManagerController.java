@@ -4,24 +4,26 @@ import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.service.ManagerService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
 @RequestMapping(path = "api/v1/managers")
+@RequiredArgsConstructor
 public class ManagerController {
 
     private final ManagerService managerService;
 
-    @Autowired
-    public ManagerController(ManagerService managerService) {
-        this.managerService = managerService;
+    @GetMapping(path = "{name}")
+    public ManagerDTO getManager(@PathVariable("name") String name) {
+        return managerService.findManagerByName(name);
     }
 
-    @GetMapping(path = "{findManager}")
-    public ManagerDTO showManagerDTO(@PathVariable("findManager") String name) {
-        return managerService.findManagerByNameDTO(name);
+    @GetMapping(path = "/findById/{id}")
+    public ManagerDTO findAllManagers(@PathVariable("id") Long id) {
+        return managerService.findById(id);
     }
 
     @PostMapping(path = "/registerManager")
@@ -31,9 +33,8 @@ public class ManagerController {
 
     @PutMapping(path = "/update")
     @Transactional
-    public String update(@RequestParam("firstName") String firstName,
-                         @RequestParam("lastName") String lastName) {
-        return managerService.updateManager(firstName, lastName);
+    public String update(@RequestBody Manager manager) {
+        return managerService.updateManager(manager.getFirst_name(), manager.getLast_name(), manager.getBirth_date());
     }
 
 }

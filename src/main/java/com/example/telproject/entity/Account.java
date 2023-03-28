@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,45 +21,32 @@ import java.util.UUID;
 
 public class Account {
     @Id
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-
-    @Column(name = "name", nullable = false, length = 100)
     private String name;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
     private AccountType type;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     private AccountStatus status;
-
-    @Column(name = "balance", nullable = false, precision = 2)
     private BigDecimal balance;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "currency_code", nullable = false)
-    private CurrencyType currencyCode;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    private CurrencyType currency_code;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "account")
+    @ToString.Exclude
     private Set<Agreement> agreements;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "debitAccount")
+    @ToString.Exclude
     private Set<Transaction> debitTransactionList;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "creditAccount")
+    @ToString.Exclude
     private Set<Transaction> creditTransactionList;
 
     @Override
