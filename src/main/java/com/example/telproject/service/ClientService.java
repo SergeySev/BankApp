@@ -9,7 +9,7 @@ import com.example.telproject.entity.enums.ClientStatus;
 import com.example.telproject.mapper.ClientMapper;
 import com.example.telproject.repository.ClientRepository;
 import com.example.telproject.repository.ManagerRepository;
-import com.example.telproject.security.EmailValidator;
+import com.example.telproject.security.CheckingEmail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,10 +30,10 @@ public class ClientService implements UserDetailsService {
     private final ClientMapper clientMapper;
     private final EmailSender emailSender;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final EmailValidator emailValidator;
+    private final CheckingEmail checkingEmail;
     private final ConfirmationTokenService confirmationTokenService;
 
-    private final static String USER_NOT_FOUND = "user with email %s not found";
+    private final static String USER_NOT_FOUND = "User with %s not found";
     private final ManagerRepository managerRepository;
 
     @Override
@@ -56,21 +55,20 @@ public class ClientService implements UserDetailsService {
                         findClientByName(first_name, last_name));
 
         if (clients.isEmpty()) {
-            throw new IllegalStateException("Users with name: " + first_name + " " + last_name + " doesn't exist in the DataBase");
+            throw new IllegalStateException(String.format(USER_NOT_FOUND, first_name + " " + last_name));
         }
         return clients;
     }
-
+    @Transactional
     public String signUpClient(Client client) {
         Optional<Client> newClient = clientRepository.findByEmail(client.getEmail());
         if (newClient.isPresent()) {
             if (newClient.get().getStatus().equals(ClientStatus.ACTIVE)) {
                 throw new IllegalStateException("User already active");
             } else {
-                System.out.println("Client in sign up " + client);
+                confirmationTokenService.deleteConfirmationToken(client);
                 ConfirmationToken confirmationToken = new ConfirmationToken(client);
                 confirmationTokenService.saveConfirmationToken(confirmationToken);
-                System.out.println("\n\n\n TOKEN IN sign Up" + confirmationToken);
                 return confirmationToken.getToken();
             }
         }
@@ -87,11 +85,10 @@ public class ClientService implements UserDetailsService {
         Client client = clientRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("Tht client not found"));
         client.setStatus(ClientStatus.ACTIVE);
         clientRepository.save(client);
-//        clientRepository.activeClient(ClientStatus.ACTIVE.getValue(), email);
     }
 
     public String register(RequestClient request) {
-        boolean isValidEmail = emailValidator.test(request.getEmail());
+        boolean isValidEmail = checkingEmail.test(request.getEmail());
         if (!isValidEmail) throw new IllegalStateException("Email is not valid");
 
         String token;
@@ -109,9 +106,6 @@ public class ClientService implements UserDetailsService {
                     request.getBirth_date(),
                     request.getPassword()
             );
-
-            System.out.println("\n\n\n\n\n Sign up client " + client + "\n\n\n\n");
-            System.out.println(client.getManager() + "\n\n\n");
             token = signUpClient(client);
         }
         String link = "http://localhost:8080/api/v1/client/confirm?token=" + token;
@@ -121,9 +115,9 @@ public class ClientService implements UserDetailsService {
 
     @Transactional
     public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("token not found"));
+        ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("Token not found"));
         if (confirmationToken.getConfirmed_at() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new IllegalStateException("Email already confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpired_at();
@@ -132,7 +126,7 @@ public class ClientService implements UserDetailsService {
 
         confirmationTokenService.setConfirmedAt(token);
         activeClient(confirmationToken.getClient().getEmail());
-        return "confirmed";
+        return "Confirmed";
     }
 
     private String buildEmail(String name, String link) {

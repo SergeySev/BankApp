@@ -1,11 +1,11 @@
 package com.example.telproject.service;
 
-import com.example.telproject.dto.ConfirmationTokenDTO;
+import com.example.telproject.entity.Client;
 import com.example.telproject.entity.ConfirmationToken;
-import com.example.telproject.mapper.ConfirmationTokenMapper;
 import com.example.telproject.repository.ConfirmationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,10 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
-    private final ConfirmationTokenMapper confirmationTokenMapper;
 
     public void saveConfirmationToken(ConfirmationToken token) {
-        System.out.println("\n\n\n\n TOKEN + " + token + "\n\n\n");
         confirmationTokenRepository.save(token);
     }
 
@@ -26,16 +24,13 @@ public class ConfirmationTokenService {
                         findByToken(token);
     }
 
-    public int setConfirmedAt(String token) {
-        return confirmationTokenRepository.updateConfirmedAt(LocalDateTime.now(), token);
+    public void setConfirmedAt(String token) {
+        confirmationTokenRepository.updateConfirmedAt(LocalDateTime.now(), token);
     }
 
-    public ConfirmationTokenDTO getConfirmationTokenByClientId(Long id) {
-        return confirmationTokenMapper.toDto(confirmationTokenRepository.findByClientId(id).orElseThrow(() -> new IllegalStateException("Token not found")));
-    }
-
-    public void deleteConfirmationToken(Long tokenId) {
-        confirmationTokenRepository.deleteById(tokenId);
+    @Transactional
+    public void deleteConfirmationToken(Client client) {
+        confirmationTokenRepository.deleteByClient(client);
     }
 
 }

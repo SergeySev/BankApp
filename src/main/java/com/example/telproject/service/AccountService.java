@@ -11,15 +11,14 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-
     private final AccountMapper accountMapper;
+    private final String ACCOUNT_NOT_FOUND = "Account with name: %s doesn't exist in the DataBase";
 
     public AccountDTO findByName(String name) {
         return accountMapper.
                 toDto(accountRepository.
                         findAccountByName(name).
                         orElseThrow(() ->
-                                new IllegalStateException("Account with name: "  +
-                                        name + " doesn't exist in the DataBase")));
+                                new IllegalStateException(String.format(ACCOUNT_NOT_FOUND, name))));
     }
 }

@@ -17,14 +17,14 @@ import java.util.Optional;
 public class ManagerService {
     private final ManagerRepository managerRepository;
     private final ManagerMapper managerMapper;
+    private final String MANAGER_NOT_FOUND = "Manager with %s %s doesn't exists in database";
 
     public ManagerDTO findManagerByName(String name) {
         return managerMapper.
                 toDto(managerRepository.
                         findManagerByFirstName(name).
                         orElseThrow(() ->
-                                new IllegalStateException(
-                                        "Manager with name: " + name + " doesn't exists in database")));
+                                new IllegalStateException(String.format(MANAGER_NOT_FOUND, "name", name))));
     }
 
     public ManagerDTO findById(Long id) {
@@ -32,8 +32,7 @@ public class ManagerService {
                 toDto(managerRepository.
                         findById(id).
                         orElseThrow(() ->
-                                new IllegalStateException(
-                                        "Manager with id: " + id + " doesn't exists in database")));
+                                new IllegalStateException(String.format(MANAGER_NOT_FOUND, "id", id))));
     }
 
     public String addNewManager(Manager manager) {
@@ -59,10 +58,7 @@ public class ManagerService {
     public String updateManager(String firstName, String lastName, Timestamp birthDate) {
         Manager manager = managerRepository.
                 findManagerByFullNameAndBirthDay(firstName, lastName, birthDate).
-                orElseThrow(() -> new IllegalStateException(
-                        "The manager with name: " +
-                                firstName + " and last name: " +
-                                lastName + " doesn't exists in database"));
+                orElseThrow(() -> new IllegalStateException(String.format(MANAGER_NOT_FOUND, "name", firstName + " " + lastName)));
         manager.setUpdated_at(Timestamp.valueOf(LocalDateTime.now()));
         return "The manager: " + "\n" + manager + "\nWas successfully updated";
     }
