@@ -28,8 +28,7 @@ public class WebSecurityConfig {
                 .anyRequest()
                 .permitAll().and()
                 .formLogin();
-        auth
-                .authenticationProvider(daoAuthenticationProvider());
+        auth.authenticationProvider(daoAuthenticationProvider());
         return http.build();
     }
 

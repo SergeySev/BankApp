@@ -36,13 +36,14 @@ public class Manager {
     @ToString.Exclude
     private Set<Product> products;
 
-    public Manager(String first_name, String lastName, ManagerStatus status, Timestamp birthDate) {
+    public Manager(String first_name, String lastName, ManagerStatus status, Timestamp birthDate, String email) {
         this.first_name = first_name;
         this.last_name = lastName;
         this.status = status;
         this.created_at = Timestamp.valueOf(LocalDateTime.now());
         this.updated_at = Timestamp.valueOf(LocalDateTime.now());
         this.birth_date = birthDate;
+        this.email = email;
     }
 
     @Override
