@@ -2,6 +2,7 @@ package com.example.telproject.service;
 
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
+import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.mapper.ManagerMapper;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
@@ -26,7 +27,7 @@ public class ManagerService {
         List<ManagerDTO> result =  managerMapper.
                 listToDTO(managerRepository.
                         findManagerByFirstName(name));
-        if (result.isEmpty()) throw new IllegalStateException(String.format(MANAGER_NOT_FOUND, "name", name));
+        if (result.isEmpty()) throw new ManagerRequestException(String.format(MANAGER_NOT_FOUND, "name", name));
         return result;
     }
 
@@ -35,7 +36,7 @@ public class ManagerService {
                 toDto(managerRepository.
                         findById(id).
                         orElseThrow(() ->
-                                new IllegalStateException(String.format(MANAGER_NOT_FOUND, "id", id))));
+                                new ManagerRequestException(String.format(MANAGER_NOT_FOUND, "id", id))));
     }
 
     public ManagerDTO addNewManager(Manager manager) {
@@ -47,13 +48,13 @@ public class ManagerService {
                 );
 
         if (manager1.isPresent()) {
-            throw new IllegalStateException("This manager is in the DB");
+            throw new ManagerRequestException("This manager is in the DB");
         }
         if (managerRepository.findManagerByEmail(manager.getEmail()).isPresent()) {
-            throw new IllegalStateException("Manager with this email already registered");
+            throw new ManagerRequestException("Manager with this email already registered");
         }
         if (!checkingEmail.test((manager.getEmail()))) {
-            throw new IllegalStateException("Email is not valid");
+            throw new ManagerRequestException("Email is not valid");
         }
         Manager newManager = new Manager(
                 manager.getFirst_name(),
@@ -74,7 +75,7 @@ public class ManagerService {
                         manager.getEmail()
                 ).
                 orElseThrow(
-                        () -> new IllegalStateException(
+                        () -> new ManagerRequestException(
                                 String.format(MANAGER_NOT_FOUND,
                                         "name",
                                         manager.getFirst_name() + " " + manager.getLast_name())));

@@ -3,6 +3,7 @@ package com.example.telproject.service;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.entity.enums.ManagerStatus;
+import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.mapper.ManagerMapper;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
@@ -72,9 +73,9 @@ class ManagerServiceTest {
     void findByNameException() {
         String name = "John";
 
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.findManagerByName(name));
         Assertions.
                 assertEquals(
@@ -99,9 +100,9 @@ class ManagerServiceTest {
     void findManagerByIdException() {
         Long id = 1L;
 
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.findById(id));
         Assertions.
                 assertEquals(
@@ -132,9 +133,9 @@ class ManagerServiceTest {
                         manager.getEmail()
                 )).thenReturn(managerOptional);
 
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
@@ -148,9 +149,9 @@ class ManagerServiceTest {
 
         Mockito.when(managerRepository.findManagerByEmail(manager.getEmail())).thenReturn(Optional.of(manager));
 
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
@@ -162,9 +163,9 @@ class ManagerServiceTest {
     void addNewManagerEmailException() {
         Manager manager = createManager();
         manager.setEmail("email");
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
@@ -189,9 +190,9 @@ class ManagerServiceTest {
     @Test
     void updateManagerException() {
         Manager manager = createManager();
-        IllegalStateException illegalStateException = Assertions.
+        ManagerRequestException illegalStateException = Assertions.
                 assertThrows(
-                        IllegalStateException.class,
+                        ManagerRequestException.class,
                         () -> managerService.updateManager(manager));
         Assertions.
                 assertEquals(

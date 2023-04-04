@@ -3,6 +3,7 @@ package com.example.telproject.controller;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.entity.enums.ManagerStatus;
+import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.service.ManagerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,12 +32,12 @@ class ManagerControllerTest {
 
     @Autowired
     ManagerController managerController;
-
     @MockBean
     ManagerService managerService;
-
     @Autowired
     MockMvc mockMvc;
+
+    String name = "John";
 
     Manager createManager() {
         Manager manager = new Manager();
@@ -52,47 +53,102 @@ class ManagerControllerTest {
     }
 
     ManagerDTO createManagerDto() {
-        return new ManagerDTO("John",
+        return new ManagerDTO(name,
                 "Doe",
                 ManagerStatus.ACTIVE.getValue(),
                 "manager@gmail.com",
                 "123123123",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                LocalDateTime.now());
-    }
-
-    private void testEndPoint(String path) throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(path))
-                .andExpect(status().isOk());
+                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
+                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
+                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime());
     }
 
     @Test
     void getManager() throws Exception {
         List<ManagerDTO> managers = new ArrayList<>();
+        ManagerDTO managerDTO = createManagerDto();
+        managers.add(managerDTO);
         Mockito.when(managerService.findManagerByName("John")).thenReturn(managers);
-        testEndPoint("/api/v1/managers/John");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/" + name))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].first_name").value(name))
+                .andExpect(jsonPath("$[0].last_name").value(managerDTO.getLast_name()))
+                .andExpect(jsonPath("$[0].status").value(managerDTO.getStatus()))
+                .andExpect(jsonPath("$[0].email").value(managerDTO.getEmail()))
+                .andExpect(jsonPath("$[0].phone_number").value(managerDTO.getPhone_number()))
+                .andExpect(jsonPath("$[0].birth_date").value("03.04.2023"))
+                .andExpect(jsonPath("$[0].created_at").value("03.04.2023 13:01"))
+                .andExpect(jsonPath("$[0].updated_at").value("03.04.2023 13:01"));
+        Mockito.verify(managerService, Mockito.times(1)).findManagerByName(name);
+    }
+
+    @Test
+    void findManagerByNameNotFoundException() throws Exception {
+        Mockito.when(managerService.findManagerByName(name)).thenThrow(new ManagerRequestException("Error"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/" + name))
+                .andExpect(status().isBadRequest());
+        Mockito.verify(managerService, Mockito.times(1)).findManagerByName(name);
     }
 
     @Test
     void findManagerById() throws Exception {
         ManagerDTO manager = createManagerDto();
         Mockito.when(managerService.findById(1L)).thenReturn(manager);
-        testEndPoint("/api/v1/managers/findById/1");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/findById/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.first_name").value(manager.getFirst_name()))
+                .andExpect(jsonPath("$.last_name").value(manager.getLast_name()))
+                .andExpect(jsonPath("$.status").value(manager.getStatus()))
+                .andExpect(jsonPath("$.email").value(manager.getEmail()))
+                .andExpect(jsonPath("$.phone_number").value(manager.getPhone_number()))
+                .andExpect(jsonPath("$.birth_date").value("03.04.2023"))
+                .andExpect(jsonPath("$.created_at").value("03.04.2023 13:01"))
+                .andExpect(jsonPath("$.updated_at").value("03.04.2023 13:01"));
+        Mockito.verify(managerService, Mockito.times(1)).findById(1L);
+    }
+
+    @Test
+    void findManagerByIdNotFoundException() throws Exception {
+        Mockito.when(managerService.findById(1L)).thenThrow(new ManagerRequestException("Error"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/findById/1"))
+                .andExpect(status().isBadRequest());
+        Mockito.verify(managerService, Mockito.times(1)).findById(1L);
     }
 
     @Test
     void addNewManager() throws Exception {
+        String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(managerJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void addNewManagerException() throws Exception {
+        Manager manager = createManager();
+
+        Mockito.when(managerService.addNewManager(manager)).thenThrow(new ManagerRequestException("Error"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(manager)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addNewManagerWithoutCSRFForbidden() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
         Manager manager = createManager();
         ManagerDTO managerDTO = createManagerDto();
 
         Mockito.when(managerService.addNewManager(manager)).thenReturn(managerDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager").with(csrf())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -107,5 +163,19 @@ class ManagerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateWithoutCSRFForbidden() throws Exception {
+        String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
+        Manager manager = createManager();
+        ManagerDTO managerDTO = createManagerDto();
+
+        Mockito.when(managerService.updateManager(manager)).thenReturn(managerDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/managers/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(managerJson))
+                .andExpect(status().isForbidden());
     }
 }
