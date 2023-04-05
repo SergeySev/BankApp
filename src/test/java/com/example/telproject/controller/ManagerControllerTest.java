@@ -119,10 +119,22 @@ class ManagerControllerTest {
     void addNewManager() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
 
+        ManagerDTO managerDTO = createManagerDto();
+        Mockito.when(managerService.addNewManager(Mockito.any())).thenReturn(managerDTO);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.first_name").value(managerDTO.getFirst_name()))
+                .andExpect(jsonPath("$.last_name").value(managerDTO.getLast_name()))
+                .andExpect(jsonPath("$.status").value(managerDTO.getStatus()))
+                .andExpect(jsonPath("$.email").value(managerDTO.getEmail()))
+                .andExpect(jsonPath("$.phone_number").value(managerDTO.getPhone_number()))
+                .andExpect(jsonPath("$.birth_date").value("03.04.2023"))
+                .andExpect(jsonPath("$.created_at").value("03.04.2023 13:01"))
+                .andExpect(jsonPath("$.updated_at").value("03.04.2023 13:01"));
+        Mockito.verify(managerService, Mockito.times(1)).addNewManager(Mockito.any());
     }
 
     @Test
@@ -135,6 +147,8 @@ class ManagerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.valueOf(manager)))
                 .andExpect(status().isBadRequest());
+        Mockito.verify(managerService, Mockito.times(0)).addNewManager(Mockito.any());
+
     }
 
     @Test
@@ -149,33 +163,43 @@ class ManagerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
                 .andExpect(status().isForbidden());
+        Mockito.verify(managerService, Mockito.times(0)).addNewManager(Mockito.any());
+
     }
 
     @Test
     void update() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
-        Manager manager = createManager();
         ManagerDTO managerDTO = createManagerDto();
 
-        Mockito.when(managerService.updateManager(manager)).thenReturn(managerDTO);
+        Mockito.when(managerService.updateManager(Mockito.any())).thenReturn(managerDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/managers/update").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.first_name").value(managerDTO.getFirst_name()))
+                .andExpect(jsonPath("$.last_name").value(managerDTO.getLast_name()))
+                .andExpect(jsonPath("$.status").value(managerDTO.getStatus()))
+                .andExpect(jsonPath("$.email").value(managerDTO.getEmail()))
+                .andExpect(jsonPath("$.phone_number").value(managerDTO.getPhone_number()))
+                .andExpect(jsonPath("$.birth_date").value("03.04.2023"))
+                .andExpect(jsonPath("$.created_at").value("03.04.2023 13:01"))
+                .andExpect(jsonPath("$.updated_at").value("03.04.2023 13:01"));
+        Mockito.verify(managerService, Mockito.times(1)).updateManager(Mockito.any());
     }
 
     @Test
     void updateWithoutCSRFForbidden() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
-        Manager manager = createManager();
         ManagerDTO managerDTO = createManagerDto();
 
-        Mockito.when(managerService.updateManager(manager)).thenReturn(managerDTO);
+        Mockito.when(managerService.updateManager(Mockito.any())).thenReturn(managerDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/managers/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(managerJson))
                 .andExpect(status().isForbidden());
+        Mockito.verify(managerService, Mockito.times(0)).updateManager(Mockito.any());
     }
 }
