@@ -5,6 +5,7 @@ import com.example.telproject.entity.Manager;
 import com.example.telproject.entity.enums.ManagerStatus;
 import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.mapper.ManagerMapper;
+import com.example.telproject.mapper.ManagerMapperImpl;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
 import org.junit.jupiter.api.Assertions;
@@ -19,12 +20,10 @@ import java.util.Optional;
 class ManagerServiceTest {
 
     CheckingEmail checkingEmail = new CheckingEmail();
-
     ManagerRepository managerRepository = Mockito.mock(ManagerRepository.class);
-    ManagerMapper managerMapper = Mockito.mock(ManagerMapper.class);
-
+    ManagerMapper managerMapper = new ManagerMapperImpl();
     ManagerService managerService = new ManagerService(managerRepository, managerMapper, checkingEmail);
-
+    String name = "John";
 
     Manager createManager() {
         Manager manager = new Manager();
@@ -33,21 +32,23 @@ class ManagerServiceTest {
         manager.setLast_name("Doe");
         manager.setStatus(ManagerStatus.ACTIVE);
         manager.setEmail("manager@gmail.com");
-        manager.setBirth_date(Timestamp.valueOf("2023-04-03 13:01:36.968924"));
-        manager.setCreated_at(Timestamp.valueOf("2023-04-03 13:01:36.968924"));
-        manager.setUpdated_at(Timestamp.valueOf("2023-04-03 13:01:36.968924"));
+        manager.setPhone_number("123123123");
+        manager.setBirth_date(Timestamp.valueOf("2023-04-03 13:01:36.968"));
+        manager.setCreated_at(Timestamp.valueOf("2023-04-03 13:01:36.968"));
+        manager.setUpdated_at(Timestamp.valueOf("2023-04-03 13:01:36.968"));
         return manager;
     }
 
     ManagerDTO createManagerDto() {
-        return new ManagerDTO("John",
-                "Doe",
-                ManagerStatus.ACTIVE.getValue(),
-                "manager@gmail.com",
-                "123123123",
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime());
+        Manager manager = createManager();
+        return new ManagerDTO(manager.getFirst_name(),
+                manager.getLast_name(),
+                manager.getStatus().getValue(),
+                manager.getEmail(),
+                manager.getPhone_number(),
+                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime(),
+                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime(),
+                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime());
     }
 
     @Test
@@ -57,16 +58,15 @@ class ManagerServiceTest {
         managers.add(manager);
 
         ManagerDTO managerDTO = createManagerDto();
-        List<ManagerDTO> managersDto = new ArrayList<>();
-        managersDto.add(managerDTO);
-
-        String name = "John";
+        List<ManagerDTO> expected = new ArrayList<>();
+        expected.add(managerDTO);
 
         Mockito.when(managerRepository.findManagerByFirstName(name)).thenReturn(managers);
-        Mockito.when(managerMapper.listToDTO(managers)).thenReturn(managersDto);
 
-        managerService.findManagerByName(name);
+        List<ManagerDTO> actual = managerService.findManagerByName(name);
+
         Mockito.verify(managerRepository, Mockito.times(1)).findManagerByFirstName(name);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -86,14 +86,14 @@ class ManagerServiceTest {
     @Test
     void findManagerById() {
         Optional<Manager> manager = Optional.ofNullable(createManager());
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO expected = createManagerDto();
         Long id = 1L;
 
         Mockito.when(managerRepository.findById(id)).thenReturn(manager);
-        Mockito.when(managerMapper.toDto(manager.get())).thenReturn(managerDTO);
 
-        managerService.findById(id);
+        ManagerDTO actual = managerService.findById(id);
         Mockito.verify(managerRepository, Mockito.times(1)).findById(id);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -115,10 +115,20 @@ class ManagerServiceTest {
         Manager manager = createManager();
         manager.setId(1L);
 
-        managerService.addNewManager(manager);
+        ManagerDTO expected = createManagerDto();
+
+        ManagerDTO actual = managerService.addNewManager(manager);
         Mockito.verify(managerRepository, Mockito.times(1)).findManagerByFullNameAndEmail(manager.getFirst_name(), manager.getLast_name(), manager.getEmail());
         Mockito.verify(managerRepository, Mockito.times(1)).findManagerByEmail(manager.getEmail());
         Mockito.verify(managerRepository, Mockito.times(1)).save(Mockito.any());
+
+        Assertions.assertEquals(expected.getFirst_name(), actual.getFirst_name());
+        Assertions.assertEquals(expected.getLast_name(), actual.getLast_name());
+        Assertions.assertEquals(expected.getEmail(), actual.getEmail());
+        Assertions.assertEquals(expected.getStatus(), actual.getStatus());
+        Assertions.assertEquals(expected.getPhone_number(), actual.getPhone_number());
+        Assertions.assertNotEquals(expected.getCreated_at(), actual.getCreated_at());
+        Assertions.assertNotEquals(expected.getUpdated_at(), actual.getUpdated_at());
     }
 
     @Test
@@ -176,15 +186,20 @@ class ManagerServiceTest {
     @Test
     void updateManager() {
         Manager manager = createManager();
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO expected = createManagerDto();
 
         Mockito.when(managerRepository.findManagerByFullNameAndEmail(manager.getFirst_name(), manager.getLast_name(), manager.getEmail())).thenReturn(Optional.of(manager));
-        Mockito.when(managerMapper.toDto(manager)).thenReturn(managerDTO);
 
-        managerService.updateManager(manager);
+        ManagerDTO actual = managerService.updateManager(manager);
 
         Mockito.verify(managerRepository, Mockito.times(1)).findManagerByFullNameAndEmail(manager.getFirst_name(), manager.getLast_name(), manager.getEmail());
-        Mockito.verify(managerMapper, Mockito.times(1)).toDto(manager);
+        Assertions.assertEquals(expected.getFirst_name(), actual.getFirst_name());
+        Assertions.assertEquals(expected.getLast_name(), actual.getLast_name());
+        Assertions.assertEquals(expected.getEmail(), actual.getEmail());
+        Assertions.assertEquals(expected.getStatus(), actual.getStatus());
+        Assertions.assertEquals(expected.getPhone_number(), actual.getPhone_number());
+        Assertions.assertEquals(expected.getCreated_at(), actual.getCreated_at());
+        Assertions.assertNotEquals(expected.getUpdated_at(), actual.getUpdated_at());
     }
 
     @Test

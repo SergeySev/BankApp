@@ -24,7 +24,7 @@ public class ManagerService {
     private final String MANAGER_NOT_FOUND = "Manager with %s %s doesn't exist in the database";
 
     public List<ManagerDTO> findManagerByName(String name) {
-        List<ManagerDTO> result =  managerMapper.
+        List<ManagerDTO> result = managerMapper.
                 listToDTO(managerRepository.
                         findManagerByFirstName(name));
         if (result.isEmpty()) throw new ManagerRequestException(String.format(MANAGER_NOT_FOUND, "name", name));
@@ -61,7 +61,8 @@ public class ManagerService {
                 manager.getLast_name(),
                 manager.getStatus(),
                 manager.getBirth_date(),
-                manager.getEmail());
+                manager.getEmail(),
+                manager.getPhone_number());
         managerRepository.save(newManager);
         return managerMapper.toDto(newManager);
     }
