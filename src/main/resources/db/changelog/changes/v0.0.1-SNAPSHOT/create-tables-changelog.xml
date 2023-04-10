@@ -36,7 +36,7 @@
             </not>
         </preConditions>
         <createTable tableName="client">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="manager_id" type="bigint">
@@ -79,7 +79,32 @@
         </createTable>
         <addForeignKeyConstraint baseTableName="confirmation_token" baseColumnNames="client_id"
                                  constraintName="fk_client_id_confirmation_token"
-                                 referencedTableName="client" referencedColumnNames="id"/>
+                                 referencedTableName="client"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-client-document-table" author="serhii">
+        <preConditions onFail="CONTINUE" onFailMessage="Table client_document already exists">
+            <not>
+                <tableExists tableName="client_document"/>
+            </not>
+        </preConditions>
+        <createTable tableName="client_document">
+            <column name="id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="link" type="VARCHAR(250)"/>
+            <column name="confirm" type="boolean"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="client_document" baseColumnNames="client_id"
+                                 constraintName="fk_client_id_client_document"
+                                 referencedTableName="client"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet author="serhii" id="create_account_table">

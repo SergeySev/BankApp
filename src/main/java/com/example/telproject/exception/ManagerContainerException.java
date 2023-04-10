@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import java.time.ZonedDateTime;
 @AllArgsConstructor
 @Getter
-public class ManagerNotFoundException {
+public class ManagerContainerException {
     private final String message;
     private final Throwable throwable;
     private final HttpStatus httpStatus;

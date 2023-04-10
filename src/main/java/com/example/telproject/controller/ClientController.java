@@ -1,8 +1,8 @@
 package com.example.telproject.controller;
 
 import com.example.telproject.dto.ClientDTO;
+import com.example.telproject.entity.Client;
 import com.example.telproject.service.ClientService;
-import com.example.telproject.service.RequestClient;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/client")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000/")
 public class ClientController {
 
     private final ClientService clientService;
@@ -28,8 +29,9 @@ public class ClientController {
     }
 
     @PostMapping(path = "/registration")
-    public String registerClient(@RequestBody RequestClient client) {
-        return clientService.register(client);
+    public String registerClient(@RequestBody Client client,
+                                 @RequestParam Long manager_id) {
+        return clientService.register(client, manager_id);
     }
 
     @GetMapping(path = "/confirm")

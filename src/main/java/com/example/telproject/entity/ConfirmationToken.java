@@ -20,7 +20,6 @@ public class ConfirmationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String token;
     private LocalDateTime created_at;
     private LocalDateTime expired_at;

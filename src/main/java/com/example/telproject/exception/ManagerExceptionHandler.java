@@ -14,12 +14,12 @@ public class ManagerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {ManagerRequestException.class})
     public ResponseEntity<Object> handleNotFoundException(ManagerRequestException e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ManagerNotFoundException managerNotFoundException = new ManagerNotFoundException(
+        ManagerContainerException managerContainerException = new ManagerContainerException(
                 e.getMessage(),
                 e,
                 badRequest,
                 ZonedDateTime.now()
                 );
-        return new ResponseEntity<>(managerNotFoundException, badRequest);
+        return new ResponseEntity<>(managerContainerException, badRequest);
     }
 }

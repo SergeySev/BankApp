@@ -68,7 +68,7 @@ class ManagerControllerTest {
         List<ManagerDTO> managers = new ArrayList<>();
         ManagerDTO managerDTO = createManagerDto();
         managers.add(managerDTO);
-        Mockito.when(managerService.findManagerByName("John")).thenReturn(managers);
+        Mockito.when(managerService.findManagerByName(name)).thenReturn(managers);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/" + name))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].first_name").value(name))
@@ -111,7 +111,7 @@ class ManagerControllerTest {
     void findManagerByIdNotFoundException() throws Exception {
         Mockito.when(managerService.findById(1L)).thenThrow(new ManagerRequestException("Error"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/findById/1"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").value("Error"));
         Mockito.verify(managerService, Mockito.times(1)).findById(1L);
     }
 
@@ -148,7 +148,6 @@ class ManagerControllerTest {
                         .content(String.valueOf(manager)))
                 .andExpect(status().isBadRequest());
         Mockito.verify(managerService, Mockito.times(0)).addNewManager(Mockito.any());
-
     }
 
     @Test
@@ -164,7 +163,6 @@ class ManagerControllerTest {
                         .content(managerJson))
                 .andExpect(status().isForbidden());
         Mockito.verify(managerService, Mockito.times(0)).addNewManager(Mockito.any());
-
     }
 
     @Test

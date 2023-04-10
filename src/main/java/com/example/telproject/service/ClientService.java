@@ -87,7 +87,7 @@ public class ClientService implements UserDetailsService {
         clientRepository.save(client);
     }
 
-    public String register(RequestClient request) {
+    public String register(Client request, Long managerId) {
         boolean isValidEmail = checkingEmail.test(request.getEmail());
         if (!isValidEmail) throw new IllegalStateException("Email is not valid");
 
@@ -97,7 +97,7 @@ public class ClientService implements UserDetailsService {
         if (findClientByEmail.isPresent()) {
             token = signUpClient(findClientByEmail.get());
         } else {
-            Manager manager = managerRepository.findById(request.getManager_id()).orElseThrow(() -> new IllegalStateException("Manager not found"));
+            Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new IllegalStateException("Manager not found"));
             Client client = new Client(
                     manager,
                     request.getFirst_name(),

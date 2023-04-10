@@ -35,6 +35,12 @@
         </preConditions>
         <dropTable tableName="confirmation_token"/>
     </changeSet>
+    <changeSet id="drop-document-table" author="serhii">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="client_document"/>
+        </preConditions>
+        <dropTable tableName="client_document"/>
+    </changeSet>
     <changeSet id="drop-client-table" author="serhii">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="client"/>

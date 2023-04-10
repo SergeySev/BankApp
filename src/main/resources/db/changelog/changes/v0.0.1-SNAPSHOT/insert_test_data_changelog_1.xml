@@ -38,7 +38,7 @@
             <column name="first_name">Bruce</column>
             <column name="last_name">Willis</column>
             <column name="email">n.mankel@google.com</column>
-            <column name="address">Strasse in Germany</column>
+            <column name="address">Street in Germany</column>
             <column name="phone">01529298777</column>
             <column name="password">1234</column>
             <column name="birth_date">1993-02-16 00:00:00</column>
@@ -52,7 +52,7 @@
             <column name="first_name">Antony</column>
             <column name="last_name">Hopkins</column>
             <column name="email">antony@google.com</column>
-            <column name="address">Strasse in England</column>
+            <column name="address">Street in England</column>
             <column name="phone">01529298888</column>
             <column name="password">1234</column>
             <column name="birth_date">2000-04-16 00:00:00</column>

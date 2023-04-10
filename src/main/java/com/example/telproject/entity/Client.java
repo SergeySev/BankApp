@@ -19,11 +19,9 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "client")
 public class Client implements UserDetails {
-        @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     @ToString.Exclude
@@ -34,7 +32,7 @@ public class Client implements UserDetails {
     private String first_name;
     private String last_name;
     private String email;
-    String password;
+    private String password;
     private String address;
     private String phone;
     private Timestamp birth_date;
@@ -48,6 +46,10 @@ public class Client implements UserDetails {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<ConfirmationToken> tokens;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<ClientDocument> clientDocuments;
 
 
     public Client(

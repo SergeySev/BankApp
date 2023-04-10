@@ -73,14 +73,14 @@ class ManagerServiceTest {
     void findByNameException() {
         String name = "John";
 
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.findManagerByName(name));
         Assertions.
                 assertEquals(
                         "Manager with name John doesn't exist in the database",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
     @Test
@@ -100,14 +100,14 @@ class ManagerServiceTest {
     void findManagerByIdException() {
         Long id = 1L;
 
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.findById(id));
         Assertions.
                 assertEquals(
                         "Manager with id 1 doesn't exist in the database",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
     @Test
@@ -143,14 +143,14 @@ class ManagerServiceTest {
                         manager.getEmail()
                 )).thenReturn(managerOptional);
 
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
                         "This manager is in the DB",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
     @Test
@@ -159,28 +159,28 @@ class ManagerServiceTest {
 
         Mockito.when(managerRepository.findManagerByEmail(manager.getEmail())).thenReturn(Optional.of(manager));
 
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
                         "Manager with this email already registered",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
     @Test
     void addNewManagerEmailException() {
         Manager manager = createManager();
         manager.setEmail("email");
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.addNewManager(manager));
         Assertions.
                 assertEquals(
                         "Email is not valid",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
     @Test
@@ -205,14 +205,14 @@ class ManagerServiceTest {
     @Test
     void updateManagerException() {
         Manager manager = createManager();
-        ManagerRequestException illegalStateException = Assertions.
+        ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
                         () -> managerService.updateManager(manager));
         Assertions.
                 assertEquals(
                         "Manager with name John Doe doesn't exist in the database",
-                        illegalStateException.getMessage());
+                        managerRequestException.getMessage());
     }
 
 }
