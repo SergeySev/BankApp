@@ -10,14 +10,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AmazonConfig {
-    private final String region = "eu-central-1";
+    Config config = new Config();
     @Bean
     public AmazonS3 s3 () {
         AWSCredentials awsCredentials = new BasicAWSCredentials(
-          "AKIAXC4OMQFCD3WB6FUX",
-          "x0G2lZ1vLHdxA1/4ZoAqLfyyc6pcmQkZGZCkHm91"
+          config.getAccessKey(),
+                config.getSecretKey()
         );
         return AmazonS3ClientBuilder.standard().
-                withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).withRegion(region).build();
+                withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).withRegion(config.getRegion()).build();
     }
 }
