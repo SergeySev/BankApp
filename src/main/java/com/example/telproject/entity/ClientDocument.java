@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,13 +25,15 @@ public class ClientDocument {
     @ManyToOne
     @JoinColumn(nullable = false, name = "client_id")
     private Client client;
-    private String link;
+    private byte[] document;
     private boolean confirm;
     private Timestamp created_at;
     private Timestamp updated_at;
 
-    public Optional<String> getLink() {
-        return Optional.ofNullable(link);
+    public ClientDocument(Client client, byte[] document) {
+        this.client = client;
+        this.document = document;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
     }
 
     @Override
@@ -38,11 +41,11 @@ public class ClientDocument {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientDocument that = (ClientDocument) o;
-        return id.equals(that.id) && Objects.equals(link, that.link);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, link);
+        return Objects.hash(id);
     }
 }

@@ -64,7 +64,7 @@ public class ClientService implements UserDetailsService {
         Optional<Client> newClient = clientRepository.findByEmail(client.getEmail());
         if (newClient.isPresent()) {
             if (newClient.get().getStatus().equals(ClientStatus.ACTIVE)) {
-                throw new IllegalStateException("User already active");
+                throw new IllegalStateException("Client with this email already registered");
             } else {
                 confirmationTokenService.deleteConfirmationToken(client);
                 ConfirmationToken confirmationToken = new ConfirmationToken(client);
