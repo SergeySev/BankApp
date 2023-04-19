@@ -22,17 +22,19 @@ public class ClientDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "client_id")
     private Client client;
     private byte[] document;
+    private String type;
     private boolean confirm;
     private Timestamp created_at;
     private Timestamp updated_at;
 
-    public ClientDocument(Client client, byte[] document) {
+    public ClientDocument(Client client, byte[] document, String type) {
         this.client = client;
         this.document = document;
+        this.type = type;
         this.created_at = Timestamp.valueOf(LocalDateTime.now());
     }
 

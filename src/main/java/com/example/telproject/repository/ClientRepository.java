@@ -18,10 +18,4 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query("SELECT c FROM Client c WHERE c.first_name=?1 and c.last_name=?2")
     List<Client> findClientByName(String first_name, String last_name);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Client  c SET c.status=?1 WHERE c.email=?2")
-    void activeClient(String status, String email);
-
-
 }

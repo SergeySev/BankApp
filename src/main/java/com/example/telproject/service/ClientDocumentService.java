@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClientDocumentService {
@@ -31,21 +33,20 @@ public class ClientDocumentService {
         if (file.isEmpty()) throw new IllegalStateException("File is empty");
         // 2. file is an image
         if (!(file.getContentType().endsWith("jpg")
-                || file.getContentType().endsWith("pdf")
                 || file.getContentType().endsWith("png")
                 || file.getContentType().endsWith("jpeg"))) throw new IllegalStateException("File is not image");
         // 3. Check if the client exists in the database
         Client client = clientRepository.findById(clientId).orElseThrow(() -> new IllegalStateException("Client not found"));
         // 4. Store the image in s3 and update database with s3 image link
         byte[] image = imageToByteArray(file);
-        ClientDocument clientDocument = new ClientDocument(client, image);
+        ClientDocument clientDocument = new ClientDocument(client, image, file.getContentType().substring(file.getContentType().indexOf("/") + 1));
         clientDocumentRepository.save(clientDocument);
     }
 
-    public ClientDocumentDTO getClientDocument(Long clientId) {
-        ClientDocument clientDocument = clientDocumentRepository
-                .findByClientId(clientId)
-                .orElseThrow(() -> new IllegalStateException("Client not found"));
-        return clientDocumentMapper.toDTO(clientDocument);
+    public List<ClientDocumentDTO> getClientDocument(Long clientId) {
+        List<ClientDocument> clientDocument = clientDocumentRepository
+                .findAllByClientId(clientId);
+        if (clientDocument.isEmpty()) throw new IllegalStateException("Document not found");
+        return clientDocumentMapper.toDTOList(clientDocument);
     }
 }

@@ -10,5 +10,5 @@ public interface ClientDocumentMapper {
 
     ClientDocumentDTO toDTO(ClientDocument clientDocument);
 
-    List<ClientDocumentDTO> toDTO(List<ClientDocument> clientDocument);
+    List<ClientDocumentDTO> toDTOList(List<ClientDocument> clientDocument);
 }

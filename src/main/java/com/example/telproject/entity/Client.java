@@ -22,7 +22,7 @@ public class Client implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     @ToString.Exclude
     private Manager manager;
@@ -39,15 +39,15 @@ public class Client implements UserDetails {
     private Timestamp created_at;
     private Timestamp updated_at;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "client")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     @ToString.Exclude
     private Set<Account> accountList;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<ConfirmationToken> tokens;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<ClientDocument> clientDocuments;
 

@@ -10,6 +10,9 @@ app:
 spring:
   main:
     banner-mode: off
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
   datasource:
     url: jdbc:postgresql://localhost:5432/bankapp
@@ -19,7 +22,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
 
   mail:
     host: localhost
