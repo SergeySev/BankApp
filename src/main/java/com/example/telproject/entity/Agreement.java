@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -31,6 +32,14 @@ public class Agreement {
     private BigDecimal sum;
     private Timestamp created_at;
     private Timestamp updated_at;
+
+    public Agreement(Account account, Product product, AccountProductStatus status, BigDecimal sum) {
+        this.account = account;
+        this.product = product;
+        this.status = status;
+        this.sum = sum;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
+    }
 
     @Override
     public boolean equals(Object o) {

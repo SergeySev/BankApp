@@ -76,12 +76,12 @@ public class Client implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id.equals(client.id) && email.equals(client.email) && phone.equals(client.phone);
+        return Objects.equals(id, client.id) && Objects.equals(email, client.email) && Objects.equals(password, client.password) && Objects.equals(phone, client.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, phone);
+        return Objects.hash(id, email, password, phone);
     }
 
     @Override

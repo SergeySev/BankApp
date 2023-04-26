@@ -5,10 +5,14 @@ import com.example.telproject.entity.enums.AccountType;
 import com.example.telproject.entity.enums.CurrencyType;
 import jakarta.persistence.*;
 import lombok.*;
+import net.andreinc.mockneat.MockNeat;
+import net.andreinc.mockneat.types.enums.CreditCardType;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 @Getter
@@ -26,7 +30,9 @@ public class Account {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-    private String name;
+    private String card_number;
+    private String csv;
+    private Timestamp expired_at;
     @Enumerated(EnumType.STRING)
     private AccountType type;
     @Enumerated(EnumType.STRING)
@@ -48,6 +54,24 @@ public class Account {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "creditAccount")
     @ToString.Exclude
     private Set<Transaction> creditTransactionList;
+
+    public Account(Client client, CurrencyType currency_code) {
+        this.client = client;
+        this.card_number = MockNeat.threadLocal().creditCards().type(CreditCardType.VISA_16).get();
+        this.csv = generateCsv();
+        this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
+        this.currency_code = currency_code;
+        this.balance = BigDecimal.ZERO;
+    }
+
+    private String generateCsv() {
+        Random random = new Random();
+        StringBuilder csv = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            csv.append(random.nextInt(0, 10));
+        }
+        return csv.toString();
+    }
 
     @Override
     public boolean equals(Object o) {

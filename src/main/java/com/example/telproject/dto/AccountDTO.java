@@ -4,7 +4,8 @@ import lombok.Value;
 
 @Value
 public class AccountDTO {
-    String name;
+    String card_number;
+    String csv;
     String type;
     String status;
     String balance;

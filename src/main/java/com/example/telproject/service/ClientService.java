@@ -55,7 +55,7 @@ public class ClientService implements UserDetailsService {
                         findClientByName(first_name, last_name));
 
         if (clients.isEmpty()) {
-            throw new IllegalStateException(String.format(USER_NOT_FOUND, first_name + " " + last_name));
+            throw new IllegalStateException(String.format(USER_NOT_FOUND, "name " + first_name + " " + last_name));
         }
         return clients;
     }
@@ -82,7 +82,7 @@ public class ClientService implements UserDetailsService {
     }
     @Transactional
     public void activeClient(String email) {
-        Client client = clientRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("Tht client not found"));
+        Client client = clientRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("The client not found"));
         client.setStatus(ClientStatus.ACTIVE);
         clientRepository.save(client);
     }

@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query("SELECT a FROM Account a WHERE a.name=?1")
-    Optional<Account> findAccountByName(String name);
+    @Query("SELECT a FROM Account a JOIN a.agreements ag WHERE ag.product.id = ?1")
+    List<Account> findByProductId(Long productId);
 }

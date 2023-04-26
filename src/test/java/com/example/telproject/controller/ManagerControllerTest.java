@@ -30,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 class ManagerControllerTest {
 
-    @Autowired
-    ManagerController managerController;
     @MockBean
     ManagerService managerService;
     @Autowired

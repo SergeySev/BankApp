@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -27,6 +28,7 @@ public class Product {
     private String name;
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
+    @Enumerated(EnumType.STRING)
     private CurrencyType currency_code;
     private BigDecimal interest_rate;
     private Integer rest;
@@ -37,16 +39,25 @@ public class Product {
     @ToString.Exclude
     private Set<Agreement> agreements;
 
+    public Product(Manager manager, String name, ProductStatus status, CurrencyType currency_code, Integer rest) {
+        this.manager = manager;
+        this.name = name;
+        this.status = status;
+        this.currency_code = currency_code;
+        this.rest = rest;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id.equals(product.id);
+        return Objects.equals(id, product.id) && Objects.equals(created_at, product.created_at);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, created_at);
     }
 }

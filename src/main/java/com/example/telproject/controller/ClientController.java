@@ -23,8 +23,8 @@ public class ClientController {
     }
 
     @GetMapping(path = "/getClients")
-    public List<ClientDTO> showClient(@PathParam("first_name") String first_name,
-                                @PathParam("last_name") String last_name) {
+    public List<ClientDTO> showClientByName(@PathParam("first_name") String first_name,
+                                            @PathParam("last_name") String last_name) {
         return clientService.findClientsByName(first_name, last_name);
     }
 
@@ -35,7 +35,7 @@ public class ClientController {
     }
 
     @GetMapping(path = "/confirm")
-    public String confirm(@RequestParam("token") String token){
+    public String confirm(@RequestParam("token") String token) {
         return clientService.confirmToken(token);
     }
 
