@@ -11,6 +11,8 @@ import com.example.telproject.repository.ClientRepository;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,6 +55,16 @@ public class ClientService implements UserDetailsService {
 
 
     /**
+     * Retrieves a list of all Clients by page.
+     *
+     * @return a list of ClientDTO objects.
+     */
+    public Page<ClientDTO> getClientsByPage(Pageable pageable) {
+        Page<Client> clients = clientRepository.findAll(pageable);
+        return clients.map(clientMapper::toDto);
+    }
+
+    /**
      * Retrieves a list of all Clients.
      *
      * @return a list of ClientDTO objects.
@@ -60,6 +72,7 @@ public class ClientService implements UserDetailsService {
     public List<ClientDTO> getClients() {
         return clientMapper.listToDTO(clientRepository.findAll());
     }
+
 
     /**
      * Searches for Clients with the given first and last name.

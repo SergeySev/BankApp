@@ -19,6 +19,13 @@ public class ClientDocumentService {
     private final ClientRepository clientRepository;
     private final ClientDocumentMapper clientDocumentMapper;
 
+    /**
+
+     Converts a MultipartFile object representing an image file into a byte array.
+     @param file the MultipartFile object representing the image file
+     @return a byte array representing the image
+     @throws IllegalStateException if an exception occurs while converting the file into a byte array
+     */
     private byte[] imageToByteArray(MultipartFile file) {
         try {
             return file.getBytes();
@@ -28,6 +35,17 @@ public class ClientDocumentService {
     }
 
 
+    /**
+
+     Uploads a document for a client and stores it in the database. The document is associated with the given client by their ID.
+     <p>
+     The uploaded document must be an image in JPEG, JPG, or PNG format, otherwise an IllegalStateException is thrown.
+     <p>
+     If the client with the given ID is not found in the database, an IllegalStateException is thrown.
+     @param clientId the ID of the client the document is associated with
+     @param file the uploaded file containing the document to store
+     @throws IllegalStateException if the file is empty, not an image, or if the client with the given ID is not found
+     */
     public void uploadClientDock(Long clientId, MultipartFile file) {
         // 1. Check if image is not empty
         if (file.isEmpty()) throw new IllegalStateException("File is empty");
@@ -43,6 +61,15 @@ public class ClientDocumentService {
         clientDocumentRepository.save(clientDocument);
     }
 
+    /**
+
+     Retrieves a list of document associated with a client by their ID from the database.
+     <p>
+     If no documents are found for the given client ID, an IllegalStateException is thrown.
+     @param clientId the ID of the client to retrieve the documents for
+     @return a list of ClientDocumentDTO objects representing the retrieved documents
+     @throws IllegalStateException if no documents are found for the given client ID
+     */
     public List<ClientDocumentDTO> getClientDocument(Long clientId) {
         List<ClientDocument> clientDocument = clientDocumentRepository
                 .findAllByClientId(clientId);

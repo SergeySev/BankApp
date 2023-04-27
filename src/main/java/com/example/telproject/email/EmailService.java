@@ -16,6 +16,14 @@ public class EmailService implements EmailSender {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender mailSender;
+
+    /**
+     Sends an email asynchronously using the configured mail sender.
+     The email is sent to the specified recipient with the provided email message.
+     @param to the email address of the recipient
+     @param email the message to be sent as an email
+     @throws IllegalStateException if there is an error while sending the email
+     */
     @Override
     @Async
     public void send(String to, String email) {

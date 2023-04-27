@@ -18,6 +18,15 @@ public class WebSecurityConfig {
 
     private final ClientService clientService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    /**
+
+     Configures the Spring Security filter chain to handle authentication and authorization for API requests.
+     @param http the HttpSecurity object to configure
+     @param auth the AuthenticationManagerBuilder used for authentication
+     @return the configured SecurityFilterChain
+     @throws Exception if there is an error in the authentication configuration
+     */
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManagerBuilder auth) throws Exception {
         http
@@ -32,6 +41,11 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    /**
+
+     Creates a DaoAuthenticationProvider that uses the BCryptPasswordEncoder to encode passwords and the ClientService for user details.
+     @return the configured DaoAuthenticationProvider
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
