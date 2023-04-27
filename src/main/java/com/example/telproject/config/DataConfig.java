@@ -1,4 +1,4 @@
-package com.example.telproject;
+package com.example.telproject.config;
 
 import com.example.telproject.entity.*;
 import com.example.telproject.entity.enums.AccountProductStatus;

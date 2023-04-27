@@ -18,6 +18,14 @@ public class AccountService {
     private final String ACCOUNT_NOT_FOUND = "Account with %s: %s doesn't exist in the DataBase";
 
 
+    /**
+     * Retrieves a list of accounts with the given productId.
+     * <p>
+     * If no accounts with the provided productId are found, a RuntimeException is thrown.
+     * @param productId the productId to search for
+     * @return a List of AccountDTO objects representing the accounts found
+     * @throws RuntimeException if no accounts with the provided productId are found
+     */
     public List<AccountDTO> getAccountByProductId(Long productId) {
         System.out.println("\n\nProduct id in  service " + productId);
         List<Account>  accounts = accountRepository.findByProductId(productId);
@@ -26,4 +34,6 @@ public class AccountService {
         }
         return accountMapper.toDtoList(accounts);
     }
+
+
 }
