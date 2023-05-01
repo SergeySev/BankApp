@@ -20,11 +20,11 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "debit_account_id", nullable = false)
-    private Account debitAccount;
+    @JoinColumn(name = "from_account_id")
+    private Account from_account_id;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "credit_account_id", nullable = false)
-    private Account creditAccount;
+    @JoinColumn(name = "to_account_id", nullable = false)
+    private Account to_account_id;
     @Enumerated(EnumType.STRING)
     private TransactionType type;
     private BigDecimal amount;

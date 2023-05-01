@@ -47,13 +47,13 @@ public class Account {
     @ToString.Exclude
     private Set<Agreement> agreements;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "debitAccount")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "from_account_id")
     @ToString.Exclude
-    private Set<Transaction> debitTransactionList;
+    private Set<Transaction> fromTransactionList;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "creditAccount")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "to_account_id")
     @ToString.Exclude
-    private Set<Transaction> creditTransactionList;
+    private Set<Transaction> toTransactionList;
 
     public Account(Client client, CurrencyType currency_code) {
         this.client = client;
@@ -62,6 +62,8 @@ public class Account {
         this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
         this.currency_code = currency_code;
         this.balance = BigDecimal.ZERO;
+        this.status = AccountStatus.ACTIVE;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
     }
 
     private String generateCsv() {
