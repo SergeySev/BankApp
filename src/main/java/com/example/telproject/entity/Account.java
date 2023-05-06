@@ -59,7 +59,8 @@ public class Account {
         this.client = client;
         this.card_number = MockNeat.threadLocal().creditCards().type(CreditCardType.VISA_16).get();
         this.csv = generateCsv();
-        this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
+//        this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
+        this.expired_at = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         this.currency_code = currency_code;
         this.balance = BigDecimal.ZERO;
         this.status = AccountStatus.ACTIVE;

@@ -16,13 +16,18 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/bankapp
-    username: ${user.postgresql}
-    password: ${password.postgresql}
+    username: postgres
+    password: 5432
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     show-sql: false
     hibernate:
       ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
 
   mail:
     host: localhost
@@ -42,9 +47,6 @@ spring:
           timeout: 3000
           writetimeout: 5000
 
-
-  liquibase:
-    change-log: classpath:/db/changelog/changelog-master.xml
 
 #logging:
 #  level:

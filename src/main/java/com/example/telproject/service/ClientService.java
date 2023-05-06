@@ -46,7 +46,7 @@ public class ClientService implements UserDetailsService {
      * @throws UsernameNotFoundException if no User was found with the given email address.
      */
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         return clientRepository.
                 findByEmail(email).
                 orElseThrow(() -> new UsernameNotFoundException(String.
@@ -61,6 +61,7 @@ public class ClientService implements UserDetailsService {
      */
     public Page<ClientDTO> getClientsByPage(Pageable pageable) {
         Page<Client> clients = clientRepository.findAll(pageable);
+        if (clients.isEmpty()) throw new IllegalStateException("No clients found");
         return clients.map(clientMapper::toDto);
     }
 

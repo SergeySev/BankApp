@@ -71,8 +71,6 @@ class ManagerServiceTest {
 
     @Test
     void findByNameException() {
-        String name = "John";
-
         ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,
@@ -81,6 +79,8 @@ class ManagerServiceTest {
                 assertEquals(
                         "Manager with name John doesn't exist in the database",
                         managerRequestException.getMessage());
+        Mockito.verify(managerRepository, Mockito.times(1)).findManagerByFirstName(name);
+
     }
 
     @Test
@@ -108,6 +108,7 @@ class ManagerServiceTest {
                 assertEquals(
                         "Manager with id 1 doesn't exist in the database",
                         managerRequestException.getMessage());
+        Mockito.verify(managerRepository, Mockito.times(1)).findById(id);
     }
 
     @Test
@@ -151,6 +152,11 @@ class ManagerServiceTest {
                 assertEquals(
                         "This manager is in the DB",
                         managerRequestException.getMessage());
+        Mockito.verify(managerRepository, Mockito.times(1)).
+                findManagerByFullNameAndEmail(
+                        manager.getFirst_name(),
+                        manager.getLast_name(),
+                        manager.getEmail());
     }
 
     @Test
@@ -167,6 +173,8 @@ class ManagerServiceTest {
                 assertEquals(
                         "Manager with this email already registered",
                         managerRequestException.getMessage());
+        Mockito.verify(managerRepository, Mockito.times(1)).findManagerByEmail(manager.getEmail());
+
     }
 
     @Test
@@ -213,6 +221,11 @@ class ManagerServiceTest {
                 assertEquals(
                         "Manager with name John Doe doesn't exist in the database",
                         managerRequestException.getMessage());
+        Mockito.verify(managerRepository, Mockito.times(1)).
+                findManagerByFullNameAndEmail(
+                        manager.getFirst_name(),
+                        manager.getLast_name(),
+                        manager.getEmail());
     }
 
 }

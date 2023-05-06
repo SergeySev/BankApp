@@ -1,5 +1,6 @@
 package com.example.telproject.service;
 
+import com.example.telproject.TelProjectApplication;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.exception.ManagerRequestException;
@@ -8,6 +9,8 @@ import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -44,6 +47,7 @@ public class ManagerService {
      @throws ManagerRequestException if no manager with the given ID is found.
      */
     public ManagerDTO findById(Long id) {
+        Logger logger = LoggerFactory.getLogger(TelProjectApplication.class);
         return managerMapper.
                 toDto(managerRepository.
                         findById(id).

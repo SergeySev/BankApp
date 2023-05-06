@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bankapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 5432
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+      - "1025:1025"
+      - "1080:1080"
+      - "3000:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bankapp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 5432

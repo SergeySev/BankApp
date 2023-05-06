@@ -27,7 +27,6 @@ public class AccountService {
      * @throws RuntimeException if no accounts with the provided productId are found
      */
     public List<AccountDTO> getAccountByProductId(Long productId) {
-        System.out.println("\n\nProduct id in  service " + productId);
         List<Account>  accounts = accountRepository.findByProductId(productId);
         if (accounts.isEmpty()) {
             throw new RuntimeException(String.format(ACCOUNT_NOT_FOUND, "Product id", productId));
