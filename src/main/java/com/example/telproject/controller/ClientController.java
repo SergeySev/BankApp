@@ -1,7 +1,7 @@
 package com.example.telproject.controller;
 
+import com.example.telproject.dto.ClientCreateDto;
 import com.example.telproject.dto.ClientDTO;
-import com.example.telproject.entity.Client;
 import com.example.telproject.service.ClientService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -75,18 +75,25 @@ public class ClientController {
      * generates a new confirmation token, and returns it.
      *
      * @param client     the Client object containing the details of the new client to be added.
-     * @param manager_id the manager_id who will work with new client
      * @return a ClientDTO object containing the details of the new client.
      */
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "When a new confirmation token is generated and returned successfully"),
+            @ApiResponse(responseCode = "200", description = "When a new confirmation token is generated and returned successfully." +
+                    "\nUse this json:" +
+                    "\n{\n" +
+                    "    \"manager_id\": 1,\n" +
+                    "    \"first_name\": \"Second\",\n" +
+                    "    \"last_name\": \"Client\",\n" +
+                    "    \"email\": \"third@gmail.com\",\n" +
+                    "    \"password\": \"123123\",\n" +
+                    "    \"birth_date\": \"1996-02-16T00:00:00.000Z\"\n" +
+                    "}"),
             @ApiResponse(responseCode = "400", description = "Client already exists or some problem with client data"),
             @ApiResponse(responseCode = "500", description = "Mail server connection failed. Couldn't connect to host, port: localhost, 1025; timeout 5000;")
     })
     @PostMapping(path = "/registration")
-    public String registerClient(@RequestBody Client client,
-                                 @RequestParam Long manager_id) {
-        return clientService.register(client, manager_id);
+    public String registerClient(@RequestBody ClientCreateDto client) {
+        return clientService.register(client);
     }
 
     /**

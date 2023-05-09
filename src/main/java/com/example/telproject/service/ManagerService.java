@@ -1,16 +1,15 @@
 package com.example.telproject.service;
 
-import com.example.telproject.TelProjectApplication;
+import com.example.telproject.dto.ManagerCreateDto;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
+import com.example.telproject.entity.enums.ManagerStatus;
 import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.mapper.ManagerMapper;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.security.CheckingEmail;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -47,7 +46,6 @@ public class ManagerService {
      @throws ManagerRequestException if no manager with the given ID is found.
      */
     public ManagerDTO findById(Long id) {
-        Logger logger = LoggerFactory.getLogger(TelProjectApplication.class);
         return managerMapper.
                 toDto(managerRepository.
                         findById(id).
@@ -64,7 +62,7 @@ public class ManagerService {
      * @return a ManagerDTO object containing the details of the newly added manager.
      * @throws ManagerRequestException if the provided manager object does not meet the requirements for a new manager.
      */
-    public ManagerDTO addNewManager(Manager manager) {
+    public ManagerDTO addNewManager(ManagerCreateDto manager) {
         if (manager.getFirst_name() == null || manager.getLast_name() == null || manager.getEmail() == null ||
                 manager.getPhone_number() == null || manager.getBirth_date() == null || manager.getStatus() == null) {
             throw new ManagerRequestException("Some fields are empty");
@@ -89,7 +87,7 @@ public class ManagerService {
         Manager newManager = new Manager(
                 manager.getFirst_name(),
                 manager.getLast_name(),
-                manager.getStatus(),
+                ManagerStatus.valueOf(manager.getStatus()),
                 manager.getBirth_date(),
                 manager.getEmail(),
                 manager.getPhone_number());
@@ -110,7 +108,7 @@ public class ManagerService {
      * The method returns the updated manager details as a ManagerDTO object.
      */
     @Transactional
-    public ManagerDTO updateManager(Manager manager) {
+    public ManagerDTO updateManager(ManagerCreateDto manager) {
         Manager managerInDb = managerRepository.
                 findManagerByFullNameAndEmail(
                         manager.getFirst_name(),

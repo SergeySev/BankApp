@@ -1,8 +1,8 @@
 package com.example.telproject.controller;
 
+import com.example.telproject.CreateManagerEntity;
+import com.example.telproject.dto.ManagerCreateDto;
 import com.example.telproject.dto.ManagerDTO;
-import com.example.telproject.entity.Manager;
-import com.example.telproject.entity.enums.ManagerStatus;
 import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.service.ManagerService;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +16,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,34 +35,14 @@ class ManagerControllerTest {
 
     String name = "John";
 
-    Manager createManager() {
-        Manager manager = new Manager();
-        manager.setId(1L);
-        manager.setFirst_name("John");
-        manager.setLast_name("Doe");
-        manager.setStatus(ManagerStatus.ACTIVE);
-        manager.setEmail("manager@gmail.com");
-        manager.setBirth_date(Timestamp.valueOf(LocalDateTime.now()));
-        manager.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
-        manager.setUpdated_at(Timestamp.valueOf(LocalDateTime.now()));
-        return manager;
-    }
+    CreateManagerEntity createManager = new CreateManagerEntity();
 
-    ManagerDTO createManagerDto() {
-        return new ManagerDTO(name,
-                "Doe",
-                ManagerStatus.ACTIVE.getValue(),
-                "manager@gmail.com",
-                "123123123",
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968924").toLocalDateTime());
-    }
+
 
     @Test
     void getManager() throws Exception {
         List<ManagerDTO> managers = new ArrayList<>();
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
         managers.add(managerDTO);
         Mockito.when(managerService.findManagerByName(name)).thenReturn(managers);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/" + name))
@@ -90,7 +68,7 @@ class ManagerControllerTest {
 
     @Test
     void findManagerById() throws Exception {
-        ManagerDTO manager = createManagerDto();
+        ManagerDTO manager = createManager.createManagerDto();
         Mockito.when(managerService.findById(1L)).thenReturn(manager);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/managers/findById/1"))
                 .andExpect(status().isOk())
@@ -117,7 +95,7 @@ class ManagerControllerTest {
     void addNewManager() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
 
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
         Mockito.when(managerService.addNewManager(Mockito.any())).thenReturn(managerDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/managers/registerManager").with(csrf())
@@ -137,7 +115,7 @@ class ManagerControllerTest {
 
     @Test
     void addNewManagerException() throws Exception {
-        Manager manager = createManager();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
 
         Mockito.when(managerService.addNewManager(manager)).thenThrow(new ManagerRequestException("Error"));
 
@@ -151,8 +129,8 @@ class ManagerControllerTest {
     @Test
     void addNewManagerWithoutCSRFForbidden() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
-        Manager manager = createManager();
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
 
         Mockito.when(managerService.addNewManager(manager)).thenReturn(managerDTO);
 
@@ -166,7 +144,7 @@ class ManagerControllerTest {
     @Test
     void update() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
 
         Mockito.when(managerService.updateManager(Mockito.any())).thenReturn(managerDTO);
 
@@ -188,7 +166,7 @@ class ManagerControllerTest {
     @Test
     void updateWithoutCSRFForbidden() throws Exception {
         String managerJson = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"status\":\"ACTIVE\",\"email\":\"manager@gmail.com\",\"birth_date\":\"1993-02-16T00:00:00.000Z\"}";
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
 
         Mockito.when(managerService.updateManager(Mockito.any())).thenReturn(managerDTO);
 

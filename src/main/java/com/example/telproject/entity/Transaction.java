@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -30,6 +32,15 @@ public class Transaction {
     private BigDecimal amount;
     private String description;
     private Timestamp created_at;
+
+    public Transaction(Account from_account_id, Account to_account_id, TransactionType type, BigDecimal amount, String description) {
+        this.from_account_id = from_account_id;
+        this.to_account_id = to_account_id;
+        this.type = type;
+        this.amount = amount.setScale(2, RoundingMode.HALF_UP);
+        this.description = description;
+        this.created_at = Timestamp.valueOf(LocalDateTime.now());
+    }
 
     @Override
     public boolean equals(Object o) {

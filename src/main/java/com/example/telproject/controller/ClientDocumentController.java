@@ -26,7 +26,7 @@ public class ClientDocumentController {
      @throws IllegalStateException if the file is empty or is not an image
      */
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful loaded"),
+            @ApiResponse(responseCode = "200", description = "Successful loaded. The request must be from front-end: http://localhost:3000/"),
             @ApiResponse(responseCode = "400", description = "File is not an image"),
     })
     @PostMapping(

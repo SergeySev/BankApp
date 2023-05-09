@@ -29,7 +29,6 @@ class ClientServiceTest {
     ClientService clientService = new ClientService(clientRepository, clientMapper, emailSender, bCryptPasswordEncoder, checkingEmail, confirmationTokenService, managerRepository);
 
     Client clientFirst = Mockito.mock(Client.class);
-    Client clientSecond = Mockito.mock(Client.class);
 
     @Test
     public void loadUserByUsernameTest(){

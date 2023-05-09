@@ -1,5 +1,6 @@
 package com.example.telproject.service;
 
+import com.example.telproject.dto.ClientCreateDto;
 import com.example.telproject.dto.ClientDTO;
 import com.example.telproject.email.EmailSender;
 import com.example.telproject.entity.Client;
@@ -153,10 +154,9 @@ public class ClientService implements UserDetailsService {
      * The confirmation token is sent to the client via email.
      *
      * @param request   the client object containing client information to be registered
-     * @param managerId the manager ID who is responsible for registering the client
      * @return a string representation of the newly generated confirmation token
      */
-    public String register(Client request, Long managerId) {
+    public String register(ClientCreateDto request) {
         boolean isValidEmail = checkingEmail.test(request.getEmail());
         if (!isValidEmail) throw new IllegalStateException("Email is not valid");
 
@@ -166,7 +166,7 @@ public class ClientService implements UserDetailsService {
         if (findClientByEmail.isPresent()) {
             token = signUpClient(findClientByEmail.get());
         } else {
-            Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new IllegalStateException("Manager not found"));
+            Manager manager = managerRepository.findById(request.getManager_id()).orElseThrow(() -> new IllegalStateException("Manager not found"));
             Client client = new Client(
                     manager,
                     request.getFirst_name(),

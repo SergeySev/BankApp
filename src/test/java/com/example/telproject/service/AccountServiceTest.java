@@ -70,19 +70,4 @@ class AccountServiceTest {
         Mockito.verify(accountRepository, Mockito.times(1)).findByProductId(1L);
         assertEquals(expected, result);
     }
-
-
-//    @Test
-//    void getAccountByProductId_whenAccountListIsEmpty() {
-//        List<Account> accountList = new ArrayList<>();
-//
-//        RuntimeException runtimeException = Assertions.assertThrows(
-//                RuntimeException.class,
-//                () -> {accountService.getAccountByProductId(1L);});
-//
-//        Mockito.when(accountRepository.findByProductId(1L)).thenReturn(accountList);
-//        assertEquals("Account with Product id: 1 doesn't exist in the DataBase", runtimeException.getMessage());
-//
-//        Mockito.verify(accountRepository, Mockito.times(1)).findByProductId(1L);
-//    }
 }

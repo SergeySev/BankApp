@@ -1,8 +1,9 @@
 package com.example.telproject.service;
 
+import com.example.telproject.CreateManagerEntity;
+import com.example.telproject.dto.ManagerCreateDto;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
-import com.example.telproject.entity.enums.ManagerStatus;
 import com.example.telproject.exception.ManagerRequestException;
 import com.example.telproject.mapper.ManagerMapper;
 import com.example.telproject.mapper.ManagerMapperImpl;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,39 +25,15 @@ class ManagerServiceTest {
     ManagerService managerService = new ManagerService(managerRepository, managerMapper, checkingEmail);
     String name = "John";
 
-    Manager createManager() {
-        Manager manager = new Manager();
-        manager.setId(1L);
-        manager.setFirst_name("John");
-        manager.setLast_name("Doe");
-        manager.setStatus(ManagerStatus.ACTIVE);
-        manager.setEmail("manager@gmail.com");
-        manager.setPhone_number("123123123");
-        manager.setBirth_date(Timestamp.valueOf("2023-04-03 13:01:36.968"));
-        manager.setCreated_at(Timestamp.valueOf("2023-04-03 13:01:36.968"));
-        manager.setUpdated_at(Timestamp.valueOf("2023-04-03 13:01:36.968"));
-        return manager;
-    }
-
-    ManagerDTO createManagerDto() {
-        Manager manager = createManager();
-        return new ManagerDTO(manager.getFirst_name(),
-                manager.getLast_name(),
-                manager.getStatus().getValue(),
-                manager.getEmail(),
-                manager.getPhone_number(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime(),
-                Timestamp.valueOf("2023-04-03 13:01:36.968").toLocalDateTime());
-    }
+    CreateManagerEntity createManager = new CreateManagerEntity();
 
     @Test
     void findManagerByName() {
-        Manager manager = createManager();
+        Manager manager = createManager.createManager();
         List<Manager> managers = new ArrayList<>();
         managers.add(manager);
 
-        ManagerDTO managerDTO = createManagerDto();
+        ManagerDTO managerDTO = createManager.createManagerDto();
         List<ManagerDTO> expected = new ArrayList<>();
         expected.add(managerDTO);
 
@@ -85,8 +61,8 @@ class ManagerServiceTest {
 
     @Test
     void findManagerById() {
-        Optional<Manager> manager = Optional.ofNullable(createManager());
-        ManagerDTO expected = createManagerDto();
+        Optional<Manager> manager = Optional.ofNullable(createManager.createManager());
+        ManagerDTO expected = createManager.createManagerDto();
         Long id = 1L;
 
         Mockito.when(managerRepository.findById(id)).thenReturn(manager);
@@ -113,10 +89,9 @@ class ManagerServiceTest {
 
     @Test
     void addNewManager() {
-        Manager manager = createManager();
-        manager.setId(1L);
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
 
-        ManagerDTO expected = createManagerDto();
+        ManagerDTO expected = createManager.createManagerDto();
 
         ManagerDTO actual = managerService.addNewManager(manager);
         Mockito.verify(managerRepository, Mockito.times(1)).findManagerByFullNameAndEmail(manager.getFirst_name(), manager.getLast_name(), manager.getEmail());
@@ -134,8 +109,8 @@ class ManagerServiceTest {
 
     @Test
     void addNewManagerExistsException() {
-        Manager manager = createManager();
-        Optional<Manager> managerOptional = Optional.ofNullable(createManager());
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
+        Optional<Manager> managerOptional = Optional.ofNullable(createManager.createManager());
 
         Mockito.when(managerRepository.
                 findManagerByFullNameAndEmail(
@@ -161,9 +136,10 @@ class ManagerServiceTest {
 
     @Test
     void addNewManagerEmailRegisteredException() {
-        Manager manager = createManager();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
+        Manager managerReturn = createManager.createManager();
 
-        Mockito.when(managerRepository.findManagerByEmail(manager.getEmail())).thenReturn(Optional.of(manager));
+        Mockito.when(managerRepository.findManagerByEmail(manager.getEmail())).thenReturn(Optional.of(managerReturn));
 
         ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
@@ -179,7 +155,7 @@ class ManagerServiceTest {
 
     @Test
     void addNewManagerEmailException() {
-        Manager manager = createManager();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
         manager.setEmail("email");
         ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
@@ -193,10 +169,13 @@ class ManagerServiceTest {
 
     @Test
     void updateManager() {
-        Manager manager = createManager();
-        ManagerDTO expected = createManagerDto();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
+        ManagerDTO expected = createManager.createManagerDto();
+        Manager managerForSearch = createManager.createManager();
 
-        Mockito.when(managerRepository.findManagerByFullNameAndEmail(manager.getFirst_name(), manager.getLast_name(), manager.getEmail())).thenReturn(Optional.of(manager));
+        Mockito.when(managerRepository.findManagerByFullNameAndEmail(manager.getFirst_name(),
+                manager.getLast_name(),
+                manager.getEmail())).thenReturn(Optional.of(managerForSearch));
 
         ManagerDTO actual = managerService.updateManager(manager);
 
@@ -212,7 +191,7 @@ class ManagerServiceTest {
 
     @Test
     void updateManagerException() {
-        Manager manager = createManager();
+        ManagerCreateDto manager = createManager.createManagerCreateDto();
         ManagerRequestException managerRequestException = Assertions.
                 assertThrows(
                         ManagerRequestException.class,

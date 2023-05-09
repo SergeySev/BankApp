@@ -1,5 +1,6 @@
 package com.example.telproject.controller;
 
+import com.example.telproject.dto.ManagerCreateDto;
 import com.example.telproject.dto.ManagerDTO;
 import com.example.telproject.entity.Manager;
 import com.example.telproject.service.ManagerService;
@@ -59,11 +60,18 @@ public class ManagerController {
      * @return a ManagerDTO object containing the details of the newly added manager.
      */
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful registered"),
+            @ApiResponse(responseCode = "200", description = "Successful registered. Use this json: {\n" +
+                    "    \"first_name\": \"First\",\n" +
+                    "    \"last_name\": \"Wilis\",\n" +
+                    "    \"status\": \"PENDING\",\n" +
+                    "    \"email\": \"122manager@gmail.com\",\n" +
+                    "    \"phone_number\": \"+4912398723\",\n" +
+                    "    \"birth_date\": \"1993-02-16T00:00:00.000Z\"\n" +
+                    "}"),
             @ApiResponse(responseCode = "400", description = "Manager already exists or some problem with manager data"),
     })
     @PostMapping(path = "/registerManager")
-    public ManagerDTO addNewManager(@RequestBody Manager manager) {
+    public ManagerDTO addNewManager(@RequestBody ManagerCreateDto manager) {
         return managerService.addNewManager(manager);
     }
 
@@ -80,12 +88,18 @@ public class ManagerController {
      * The response contains the updated manager details as a ManagerDTO object.
      */
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Manager details updated successfully"),
+            @ApiResponse(responseCode = "200", description = "Manager details updated successfully. Use this json: {\n" +
+                    "    \"first_name\": \"First\",\n" +
+                    "    \"last_name\": \"Manager\",\n" +
+                    "    \"status\": \"PENDING\",\n" +
+                    "    \"birth_date\": \"1993-02-16T00:00:00.000Z\",\n" +
+                    "    \"email\": \"1manager@gmail.com\"\n" +
+                    "    }"),
             @ApiResponse(responseCode = "400", description = "Manager with given name not found in the database")
     })
     @PutMapping(path = "/update")
     @Transactional
-    public ManagerDTO update(@RequestBody Manager manager) {
+    public ManagerDTO update(@RequestBody ManagerCreateDto manager) {
         return managerService.updateManager(manager);
     }
 
