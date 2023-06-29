@@ -21,8 +21,8 @@ public class Agreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "card_id")
+    private Card card;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -33,8 +33,8 @@ public class Agreement {
     private Timestamp created_at;
     private Timestamp updated_at;
 
-    public Agreement(Account account, Product product, AccountProductStatus status, BigDecimal sum) {
-        this.account = account;
+    public Agreement(Card card, Product product, AccountProductStatus status, BigDecimal sum) {
+        this.card = card;
         this.product = product;
         this.status = status;
         this.sum = sum;
@@ -46,11 +46,11 @@ public class Agreement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Agreement agreement = (Agreement) o;
-        return id.equals(agreement.id) && account.equals(agreement.account);
+        return id.equals(agreement.id) && card.equals(agreement.card);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account);
+        return Objects.hash(id, card);
     }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Value
 public class TransactionDTO {
-    String from_account_id;
+    String from_card_id;
     String description;
     String amount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")

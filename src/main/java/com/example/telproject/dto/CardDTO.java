@@ -3,7 +3,7 @@ package com.example.telproject.dto;
 import lombok.Value;
 
 @Value
-public class AccountDTO {
+public class CardDTO {
     String card_number;
     String csv;
     String type;

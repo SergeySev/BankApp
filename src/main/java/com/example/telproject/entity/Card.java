@@ -23,7 +23,7 @@ import java.util.Set;
 @Entity
 @Table(name = "account")
 
-public class Account {
+public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,24 +43,23 @@ public class Account {
     private Timestamp created_at;
     private Timestamp updated_at;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "account")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "card")
     @ToString.Exclude
     private Set<Agreement> agreements;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "from_account_id")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "from_card_id")
     @ToString.Exclude
     private Set<Transaction> fromTransactionList;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "to_account_id")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "to_card_id")
     @ToString.Exclude
     private Set<Transaction> toTransactionList;
 
-    public Account(Client client, CurrencyType currency_code) {
+    public Card(Client client, CurrencyType currency_code) {
         this.client = client;
         this.card_number = MockNeat.threadLocal().creditCards().type(CreditCardType.VISA_16).get();
         this.csv = generateCsv();
-//        this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
-        this.expired_at = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        this.expired_at = Timestamp.valueOf(LocalDateTime.now().plusYears(5));
         this.currency_code = currency_code;
         this.balance = BigDecimal.ZERO;
         this.status = AccountStatus.ACTIVE;
@@ -80,8 +79,8 @@ public class Account {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return id.equals(account.id) && client.equals(account.client);
+        Card card = (Card) o;
+        return id.equals(card.id) && client.equals(card.client);
     }
 
     @Override

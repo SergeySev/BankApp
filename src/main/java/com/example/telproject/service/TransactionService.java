@@ -2,12 +2,12 @@ package com.example.telproject.service;
 
 import com.example.telproject.dto.TransactionCreateDto;
 import com.example.telproject.dto.TransactionDTO;
-import com.example.telproject.entity.Account;
+import com.example.telproject.entity.Card;
 import com.example.telproject.entity.Transaction;
 import com.example.telproject.entity.enums.AccountStatus;
 import com.example.telproject.entity.enums.TransactionType;
 import com.example.telproject.mapper.TransactionMapper;
-import com.example.telproject.repository.AccountRepository;
+import com.example.telproject.repository.CardRepository;
 import com.example.telproject.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionService {
     private final TransactionRepository transactionRepository;
-    private final AccountRepository accountRepository;
+    private final CardRepository cardRepository;
     private final TransactionMapper transactionMapper;
     private final String ACCOUNT_NOT_FOUND = "Account with %s doesn't exist in the database";
 
@@ -37,9 +37,9 @@ public class TransactionService {
         if (request.getAmount().compareTo(BigDecimal.valueOf(0)) <= 0) {
             throw new IllegalStateException("The amount must be a positive integer");
         }
-        Account cashToAcc = accountRepository.
-                findById(request.getTo_account_id()).
-                orElseThrow(() -> new IllegalStateException(String.format(ACCOUNT_NOT_FOUND, request.getTo_account_id())));
+        Card cashToAcc = cardRepository.
+                findById(request.getTo_card_id()).
+                orElseThrow(() -> new IllegalStateException(String.format(ACCOUNT_NOT_FOUND, request.getTo_card_id())));
 
         if (!cashToAcc.getStatus().equals(AccountStatus.ACTIVE)) {
             throw new IllegalStateException("Account is not active");
@@ -58,7 +58,7 @@ public class TransactionService {
 
 
         // Save the updated account details in the database
-        accountRepository.save(cashToAcc);
+        cardRepository.save(cashToAcc);
         transaction.setType(TransactionType.APPROVED);
         transactionRepository.save(transaction);
         return transactionMapper.toDto(transaction);
@@ -74,24 +74,24 @@ public class TransactionService {
     @Transactional
     public TransactionDTO cashBetweenAccounts(TransactionCreateDto request) {
 
-        Account toAccount = accountRepository.
-                findById(request.getTo_account_id()).
+        Card toCard = cardRepository.
+                findById(request.getTo_card_id()).
                 orElseThrow(() -> new IllegalStateException(String.
-                        format(ACCOUNT_NOT_FOUND, request.getTo_account_id())));
+                        format(ACCOUNT_NOT_FOUND, request.getTo_card_id())));
 
-        Account fromAccount = accountRepository.
-                findById(request.getFrom_account_id()).
+        Card fromCard = cardRepository.
+                findById(request.getFrom_card_id()).
                 orElseThrow(() -> new IllegalStateException(String.
-                        format(ACCOUNT_NOT_FOUND, request.getFrom_account_id())));
+                        format(ACCOUNT_NOT_FOUND, request.getFrom_card_id())));
 
-        if (!toAccount.getStatus().equals(AccountStatus.ACTIVE) || !fromAccount.getStatus().equals(AccountStatus.ACTIVE)) {
+        if (!toCard.getStatus().equals(AccountStatus.ACTIVE) || !fromCard.getStatus().equals(AccountStatus.ACTIVE)) {
             throw new IllegalStateException("Account is not active");
         }
 
         request.setAmount(request.getAmount().setScale(2, RoundingMode.HALF_UP));
 
-        BigDecimal balanceFromAcc = fromAccount.getBalance();
-        BigDecimal balanceToAcc = toAccount.getBalance();
+        BigDecimal balanceFromAcc = fromCard.getBalance();
+        BigDecimal balanceToAcc = toCard.getBalance();
 
         //Check if there is enough money in the account to complete the transfer
         if (request.getAmount().compareTo(balanceFromAcc) > 0) {
@@ -99,14 +99,14 @@ public class TransactionService {
         }
 
         //Update balances of the accounts involved
-        toAccount.setBalance(balanceToAcc.add(request.getAmount()).setScale(2, RoundingMode.HALF_UP));
-        fromAccount.setBalance(balanceFromAcc.subtract(request.getAmount()).setScale(2, RoundingMode.HALF_UP));
+        toCard.setBalance(balanceToAcc.add(request.getAmount()).setScale(2, RoundingMode.HALF_UP));
+        fromCard.setBalance(balanceFromAcc.subtract(request.getAmount()).setScale(2, RoundingMode.HALF_UP));
 
         //Update accounts details in the database
-        accountRepository.saveAll(List.of(toAccount, fromAccount));
+        cardRepository.saveAll(List.of(toCard, fromCard));
 
         //Set transaction details
-        Transaction transaction = new Transaction(fromAccount, toAccount, TransactionType.APPROVED, request.getAmount(), request.getDescription());
+        Transaction transaction = new Transaction(fromCard, toCard, TransactionType.APPROVED, request.getAmount(), request.getDescription());
 
 
         transactionRepository.save(transaction);

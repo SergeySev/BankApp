@@ -23,19 +23,19 @@ public class Transaction {
     private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "from_account_id")
-    private Account from_account_id;
+    private Card from_card_id;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "to_account_id", nullable = false)
-    private Account to_account_id;
+    @JoinColumn(name = "to_card_id", nullable = false)
+    private Card to_card_id;
     @Enumerated(EnumType.STRING)
     private TransactionType type;
     private BigDecimal amount;
     private String description;
     private Timestamp created_at;
 
-    public Transaction(Account from_account_id, Account to_account_id, TransactionType type, BigDecimal amount, String description) {
-        this.from_account_id = from_account_id;
-        this.to_account_id = to_account_id;
+    public Transaction(Card from_card_id, Card to_card_id, TransactionType type, BigDecimal amount, String description) {
+        this.from_card_id = from_card_id;
+        this.to_card_id = to_card_id;
         this.type = type;
         this.amount = amount.setScale(2, RoundingMode.HALF_UP);
         this.description = description;

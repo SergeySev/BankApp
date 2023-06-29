@@ -5,7 +5,7 @@ import com.example.telproject.entity.enums.AccountProductStatus;
 import com.example.telproject.entity.enums.CurrencyType;
 import com.example.telproject.entity.enums.ManagerStatus;
 import com.example.telproject.entity.enums.ProductStatus;
-import com.example.telproject.repository.AccountRepository;
+import com.example.telproject.repository.CardRepository;
 import com.example.telproject.repository.ClientRepository;
 import com.example.telproject.repository.ManagerRepository;
 import com.example.telproject.repository.ProductRepository;
@@ -24,7 +24,7 @@ public class DataConfig {
     CommandLineRunner commandLineRunner(ManagerRepository managerRepository,
                                         ClientRepository clientRepository,
                                         ProductRepository productRepository,
-                                        AccountRepository accountRepository) {
+                                        CardRepository cardRepository) {
         return args -> {
             Manager john = new Manager("First",
                     "Manager",
@@ -59,17 +59,17 @@ public class DataConfig {
                     CurrencyType.UAH,
                     50);
 
-            Account account_credit = new Account(firstClient,
+            Card card_credit = new Card(firstClient,
                     CurrencyType.EUR);
-            Account account_mortgage = new Account(secondClient,
+            Card card_mortgage = new Card(secondClient,
                     CurrencyType.UAH);
 
-            Agreement agreement_credit = new Agreement(account_credit,
+            Agreement agreement_credit = new Agreement(card_credit,
                     credit_product,
                     AccountProductStatus.ACTIVE,
                     BigDecimal.valueOf(100.23));
 
-            Agreement agreement_mortgage = new Agreement(account_mortgage,
+            Agreement agreement_mortgage = new Agreement(card_mortgage,
                     mortgage_product,
                     AccountProductStatus.ACTIVE,
                     BigDecimal.valueOf(200.23));
@@ -83,11 +83,11 @@ public class DataConfig {
             john.getProducts().addAll(List.of(credit_product, mortgage_product));
 
             // Set all relations between entities Client and Account
-            firstClient.setAccountList(new HashSet<>());
-            firstClient.getAccountList().add(account_credit);
+            firstClient.setCardList(new HashSet<>());
+            firstClient.getCardList().add(card_credit);
 
-            secondClient.setAccountList(new HashSet<>());
-            secondClient.getAccountList().add(account_mortgage);
+            secondClient.setCardList(new HashSet<>());
+            secondClient.getCardList().add(card_mortgage);
 
             // Set all relations between entities Product and Agreements
             credit_product.setAgreements(new HashSet<>());
@@ -101,7 +101,7 @@ public class DataConfig {
             productRepository.saveAll(List.of(credit_product, mortgage_product));
             managerRepository.saveAll(List.of(john));
             clientRepository.saveAll(List.of(firstClient, secondClient));
-            accountRepository.saveAll(List.of(account_credit, account_mortgage));
+            cardRepository.saveAll(List.of(card_credit, card_mortgage));
         };
     }
 }

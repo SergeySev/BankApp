@@ -1,7 +1,7 @@
 package com.example.telproject.controller;
 
-import com.example.telproject.dto.AccountDTO;
-import com.example.telproject.service.AccountService;
+import com.example.telproject.dto.CardDTO;
+import com.example.telproject.service.CardService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/accounts")
 @RequiredArgsConstructor
-public class AccountController {
+public class CardController {
 
-    private final AccountService accountService;
+    private final CardService cardService;
 
     /**
 
@@ -32,7 +32,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Account doesn't exist"),
     })
     @GetMapping(path = "/accounts_by_product")
-    public List<AccountDTO> getAccountByProductId(@RequestParam Long product_id) {
-        return accountService.getAccountByProductId(product_id);
+    public List<CardDTO> getAccountByProductId(@RequestParam Long product_id) {
+        return cardService.getAccountByProductId(product_id);
     }
 }

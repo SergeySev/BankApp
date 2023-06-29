@@ -41,7 +41,7 @@ public class Client implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     @ToString.Exclude
-    private Set<Account> accountList;
+    private Set<Card> cardList;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @ToString.Exclude

@@ -24,7 +24,7 @@ public class TransactionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = """
                     Successful transaction. Use this json: {
-                        "to_account_id": 1,
+                        "to_card_id": 1,
                         "amount": 100,
                         "type": "NEW",
                         "description": "100"
@@ -46,8 +46,8 @@ public class TransactionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = """
                     Successful transaction. Use this json: {
-                        "from_account_id": 1,
-                        "to_account_id": 2,
+                        "from_card_id": 1,
+                        "to_card_id": 2,
                         "amount": 100,
                         "type": "NEW",
                         "description": "100"

@@ -1,14 +1,14 @@
 package com.example.telproject.mapper;
 
-import com.example.telproject.dto.AccountDTO;
-import com.example.telproject.entity.Account;
+import com.example.telproject.dto.CardDTO;
+import com.example.telproject.entity.Card;
 import org.mapstruct.Mapper;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    AccountDTO toDto(Account account);
+    CardDTO toDto(Card card);
 
-    List<AccountDTO> toDtoList(List<Account> accounts);
+    List<CardDTO> toDtoList(List<Card> cards);
 }
